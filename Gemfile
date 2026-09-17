@@ -58,7 +58,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
-gem 'simple_calendar', '~> 2.4'
+gem 'simple_calendar', '~> 3.1'
 # PostgreSQL → 本番用
 group :production do
   gem 'pg'
