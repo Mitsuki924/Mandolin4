@@ -1,0 +1,38 @@
+<div style="max-width: 420px; margin: 40px auto; padding: 30px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);">
+  <h2 style="color: #1e3a8a; text-align: center; margin-top: 0; margin-bottom: 25px; font-size: 24px;">✨ 新規アカウント登録</h2>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <!-- メールアドレス -->
+    <div style="margin-bottom: 20px;">
+      <%= f.label :email, "メールアドレス", style: "display: block; font-weight: bold; margin-bottom: 6px; color: #334155; font-size: 14px;" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", style: "width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; outline: none;" %>
+    </div>
+
+    <!-- パスワード -->
+    <div style="margin-bottom: 20px;">
+      <%= f.label :password, "パスワード", style: "display: block; font-weight: bold; margin-bottom: 6px; color: #334155; font-size: 14px;" %>
+      <% if @minimum_password_length %>
+        <span style="font-size: 12px; color: #94a3b8; display: block; margin-bottom: 4px;">（<%= @minimum_password_length %>文字以上で入力してください）</span>
+      <% end %>
+      <%= f.password_field :password, autocomplete: "new-password", style: "width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; outline: none;" %>
+    </div>
+
+    <!-- パスワード確認 -->
+    <div style="margin-bottom: 25px;">
+      <%= f.label :password_confirmation, "パスワード（確認用）", style: "display: block; font-weight: bold; margin-bottom: 6px; color: #334155; font-size: 14px;" %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", style: "width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; outline: none;" %>
+    </div>
+
+    <!-- 登録ボタン -->
+    <div style="margin-bottom: 20px;">
+      <%= f.submit "アカウントを登録する", style: "width: 100%; background: #2563eb; color: #ffffff; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer;" %>
+    </div>
+  <% end %>
+
+  <!-- 下部リンク案内 -->
+  <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #f1f5f9; text-align: center; font-size: 13px; color: #64748b; display: flex; flex-direction: column; gap: 8px;">
+    <%= link_to "既にアカウントをお持ちの方はこちら（ログイン）", new_user_session_path, style: "color: #2563eb; text-decoration: none;" %>
+  </div>
+</div>

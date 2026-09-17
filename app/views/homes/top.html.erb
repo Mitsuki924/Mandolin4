@@ -1,87 +1,192 @@
-<!-- 🎺 メインタイトル -->
-<div style="text-align: center; margin: 30px 0;">
-  <h1 style="font-size: 32px; font-weight: bold; color: #1e3a8a;">Let's fun Mandolin!</h1>
-  <p style="color: #64748b;">マンドリンの演奏会情報とお気に入り動画を共有しよう</p>
-</div>
+<div class="top-page" style="max-width: 960px; margin: 0 auto; padding: 10px 10px 40px 10px;">
 
-<hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
+  <!-- 🏛️ 額縁風ゴールドフレーム＆五線譜の透かしヒーローバナー -->
+  <div class="hero-classical-frame" style="position: relative; overflow: hidden; background: linear-gradient(145deg, #090d16 0%, #0f172a 60%, #1e1b18 100%); color: #ffffff; border-radius: 8px; padding: 54px 30px; text-align: center; box-shadow: 0 16px 36px rgba(15, 23, 42, 0.35); margin-bottom: 44px; border: 1px solid #334155; outline: 1px solid rgba(180, 83, 9, 0.7); outline-offset: -7px;">
+    
+    <!-- 五線譜の透かし背景レイヤー -->
+    <div class="score-watermark"></div>
 
-<!-- 🎻 直近の演奏会セクション -->
-<section style="margin-bottom: 40px;">
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h2>直近の演奏会</h2>
-    <%= link_to "演奏会一覧をもっと見る ≫", tweets_path, style: "color: #2563eb; text-decoration: none; font-weight: bold;" %>
+    <!-- コンテンツレイヤー -->
+    <div style="position: relative; z-index: 2;">
+      <div class="font-cinzel" style="font-size: 12px; letter-spacing: 4px; color: #fbbf24; margin-bottom: 12px; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.6);">
+        MANDOLIN ENSEMBLE &amp; SCORE
+      </div>
+
+      <h1 class="font-cinzel" style="font-size: 36px; margin: 0 0 8px 0; letter-spacing: 2.5px; color: #f8fafc; font-weight: 700; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">
+        Let's fun Mandolin!
+      </h1>
+
+      <!-- バナー内クラシカル・オーナメント罫線 -->
+      <div class="classic-divider" style="max-width: 320px; margin: 12px auto 18px auto;">
+        <span class="classic-divider-ornament" style="color: #fbbf24;">❖</span>
+      </div>
+
+      <p style="font-size: 14.5px; margin: 0 0 32px 0; color: #cbd5e1; line-height: 1.9; max-width: 620px; margin-left: auto; margin-right: auto; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">
+        マンドリン音楽を愛するすべての人のための情報共有プラットフォーム。<br>
+        定期演奏会の告知やチケット案内、珠玉のアーカイブ演奏動画を共有・発見できます。
+      </p>
+
+      <!-- メインCTAボタン -->
+      <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+        <%= link_to tweets_path, class: "letterpress-btn", style: "background: linear-gradient(135deg, #d97706, #b45309); color: #ffffff; padding: 12px 30px; border-radius: 4px; font-weight: bold; text-decoration: none; font-size: 14px; box-shadow: 0 4px 14px rgba(180, 83, 9, 0.4); border: 1px solid rgba(251, 191, 36, 0.4); letter-spacing: 0.5px; display: inline-block;" do %>
+          演奏会を探す
+        <% end %>
+        <%= link_to movies_path, class: "letterpress-btn", style: "background: rgba(15, 23, 42, 0.7); color: #f8fafc; padding: 12px 30px; border-radius: 4px; font-weight: bold; text-decoration: none; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 1px solid #475569; backdrop-filter: blur(4px); letter-spacing: 0.5px; display: inline-block;" do %>
+          演奏動画を観る
+        <% end %>
+      </div>
+    </div>
   </div>
 
-  <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
-    <% if @recent_tweets.present? %>
-      <% @recent_tweets.each do |t| %>
-        <div style="flex: 1; min-width: 250px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 15px; background: #fff; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <h4 style="margin-top: 0; color: #1e293b;"><%= t.title.presence || t.name %></h4>
-            <p style="font-size: 14px; margin: 5px 0; color: #475569;">📅 日時：<%= t.date %></p>
-            <p style="font-size: 14px; margin: 5px 0; color: #475569;">📍 場所：<%= t.place %></p>
-          </div>
+  <!-- 特徴案内カード -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 45px;">
+    <div class="classic-paper-card" style="padding: 26px 22px; text-align: center; border-radius: 4px;">
+      <div class="font-cinzel" style="font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #b45309; margin-bottom: 8px;">CONCERTS</div>
+      <h3 class="font-serif-title" style="color: #0f172a; margin: 0 0 10px 0; font-size: 17px; font-weight: 600;">演奏会を見逃さない</h3>
+      <p style="color: #57534e; font-size: 13px; margin: 0; line-height: 1.6;">開催日までのカウントダウンや地域検索で、行きたいコンサートをすぐにチェック。</p>
+    </div>
 
-          <!-- ❤️ 気になる！ボタン＆詳細リンクエリア -->
-          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <% if user_signed_in? %>
-                <% if current_user.already_liked?(t) %>
-                  <%= button_to tweet_likes_path(t), method: :delete, style: "background: #fee2e2; border: 1px solid #fca5a5; color: #ef4444; padding: 4px 10px; border-radius: 20px; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center;" do %>
-                    ❤️ 気になる！済 (<%= t.likes.count %>)
+    <div class="classic-paper-card" style="padding: 26px 22px; text-align: center; border-radius: 4px;">
+      <div class="font-cinzel" style="font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #b45309; margin-bottom: 8px;">ARCHIVE</div>
+      <h3 class="font-serif-title" style="color: #0f172a; margin: 0 0 10px 0; font-size: 17px; font-weight: 600;">名演奏に出会う</h3>
+      <p style="color: #57534e; font-size: 13px; margin: 0; line-height: 1.6;">YouTubeの演奏動画を投稿・視聴。お気に入りのアンサンブルやオーケストラを発見。</p>
+    </div>
+
+    <div class="classic-paper-card" style="padding: 26px 22px; text-align: center; border-radius: 4px;">
+      <div class="font-cinzel" style="font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #b45309; margin-bottom: 8px;">COMMUNITY</div>
+      <h3 class="font-serif-title" style="color: #0f172a; margin: 0 0 10px 0; font-size: 17px; font-weight: 600;">つながる・応援する</h3>
+      <p style="color: #57534e; font-size: 13px; margin: 0; line-height: 1.6;">お気に入り保存やコメント欄で、演奏者へ応援や感想メッセージを直接届けられます。</p>
+    </div>
+  </div>
+
+  <!-- 🏛️ 注目の直近演奏会ピックアップ（四隅コーナー装飾付き） -->
+  <div style="margin-bottom: 45px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h2 class="font-serif-title" style="color: #0f172a; font-size: 20px; margin: 0; font-weight: 700;">注目の直近演奏会</h2>
+      <%= link_to "すべて見る ≫", tweets_path, class: "gold-underline-dark", style: "font-size: 13px; font-weight: bold;" %>
+    </div>
+
+    <% if @upcoming_tweets.present? %>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <% @upcoming_tweets.each do |t| %>
+          <div class="classic-paper-inner corner-ornament-card" style="border: 1px solid #d6d3d1; border-radius: 4px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; box-shadow: 0 2px 5px rgba(41, 37, 36, 0.03);">
+            
+            <div style="display: flex; gap: 15px; align-items: center; flex: 1; min-width: 280px;">
+              <div class="paper-shadow paper-shadow-hover" style="flex-shrink: 0; width: 70px; height: 95px; border-radius: 4px; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; position: relative;">
+                <% if t.pamphlets.attached? %>
+                  <%= link_to tweet_path(t.id) do %>
+                    <%= image_tag t.pamphlets.first, style: "width: 100%; height: 100%; object-fit: cover; display: block;" %>
+                  <% end %>
+                  <% if t.pamphlets.count > 1 %>
+                    <span class="font-cinzel" style="position: absolute; bottom: 3px; right: 3px; background: rgba(15, 23, 42, 0.85); color: #fff; font-size: 9px; padding: 1px 4px; border-radius: 3px;">2P</span>
                   <% end %>
                 <% else %>
-                  <%= button_to tweet_likes_path(t), method: :post, style: "background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; padding: 4px 10px; border-radius: 20px; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center;" do %>
-                    🤍 気になる！ (<%= t.likes.count %>)
+                  <div class="font-cinzel" style="text-align: center; color: #a8a29e; font-size: 10px; font-weight: 700; letter-spacing: 0.5px;">NO IMAGE</div>
+                <% end %>
+              </div>
+
+              <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap;">
+                  <strong class="font-serif-title" style="color: #0f172a; font-size: 17px; font-weight: 600;">
+                    <%= link_to (t.title.presence || t.name), tweet_path(t.id), class: "serif-hover", style: "color: #0f172a; text-decoration: none;" %>
+                  </strong>
+
+                  <!-- 🎫 チケット半券風カウントダウンバッジ -->
+                  <% if t.date.present? %>
+                    <% days_left = (t.date - Date.today).to_i %>
+                    <% if days_left == 0 %>
+                      <div style="display: inline-flex; align-items: center; border: 1px solid #ef4444; border-left: 3px solid #ef4444; background: #fef2f2; padding: 1px 7px; border-radius: 3px;">
+                        <span class="font-cinzel" style="font-size: 9px; font-weight: 700; color: #dc2626; letter-spacing: 0.5px;">TODAY</span>
+                        <span style="font-size: 11px; font-weight: bold; color: #dc2626; margin-left: 4px;">本日開演</span>
+                      </div>
+                    <% elsif days_left > 0 %>
+                      <div style="display: inline-flex; align-items: center; border: 1px dashed #b45309; border-left: 3px solid #b45309; background: #fffbeb; padding: 1px 7px; border-radius: 3px;">
+                        <span class="font-cinzel" style="font-size: 9px; font-weight: 700; color: #92400e; letter-spacing: 0.5px;">TICKET</span>
+                        <span style="font-size: 11px; color: #78350f; margin-left: 5px;">
+                          あと <strong class="font-cinzel" style="font-size: 12px; font-weight: 700; color: #b45309;"><%= days_left %></strong> 日
+                        </span>
+                      </div>
+                    <% end %>
                   <% end %>
-                <% end %>
-              <% else %>
-                <%= link_to new_user_session_path, style: "background: #f1f5f9; border: 1px solid #cbd5e1; color: #94a3b8; padding: 4px 10px; border-radius: 20px; text-decoration: none; font-size: 12px; display: inline-flex; align-items: center;" do %>
-                  🤍 気になる！ (<%= t.likes.count %>)
-                <% end %>
-              <% end %>
+                </div>
+                <p style="font-size: 13px; color: #78716c; margin: 0; line-height: 1.5;">
+                  日程：<span class="font-cinzel" style="font-weight: 600;"><%= t.date %></span> <%= t.time.strftime('%H:%M') if t.time.present? %><br>
+                  会場：<%= t.place %>
+                </p>
+              </div>
             </div>
 
-            <%= link_to "詳細を見る", tweet_path(t.id), style: "font-size: 13px; color: #0284c7; text-decoration: none; font-weight: bold;" %>
+            <div>
+              <%= link_to "詳細を見る", tweet_path(t.id), class: "btn-action btn-show" %>
+            </div>
+
           </div>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     <% else %>
-      <p style="color: #94a3b8;">現在予定されている演奏会はありません</p>
+      <div style="background: #ffffff; border: 1px dashed #d6d3d1; border-radius: 4px; padding: 25px; text-align: center; color: #a8a29e; font-size: 14px;">
+        現在予定されている直近の演奏会はありません。
+      </div>
     <% end %>
   </div>
-</section>
 
-<!-- 🎬 最近の演奏動画セクション -->
-<section style="margin-bottom: 40px;">
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h2>最近の演奏動画</h2>
-    <%= link_to "動画一覧をもっと見る ≫", movies_path, style: "color: #2563eb; text-decoration: none; font-weight: bold;" %>
-  </div>
+  <!-- 🏛️ 新着の演奏動画ピックアップ（四隅コーナー装飾付き） -->
+  <div>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h2 class="font-serif-title" style="color: #0f172a; font-size: 20px; margin: 0; font-weight: 700;">新着の演奏動画</h2>
+      <%= link_to "すべて見る ≫", movies_path, class: "gold-underline-dark", style: "font-size: 13px; font-weight: bold;" %>
+    </div>
 
-  <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
     <% if @recent_movies.present? %>
-      <% @recent_movies.each do |m| %>
-        <div style="flex: 1; min-width: 250px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 15px; background: #fff; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <% if m.link.present? && find_youtube_url(m.link).present? %>
-              <iframe width="100%" height="150" 
-                      src="https://www.youtube.com/embed/<%= find_youtube_url(m.link) %>" 
-                      frameborder="0" allowfullscreen style="border-radius: 6px;">
-              </iframe>
-            <% end %>
-            <h4 style="margin: 10px 0 5px 0; color: #1e293b;"><%= m.movietitle %></h4>
-            <p style="font-size: 13px; color: #64748b;"><%= truncate(m.point, length: 30) %></p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px;">
+        <% @recent_movies.each do |m| %>
+          <div class="classic-paper-inner corner-ornament-card" style="border: 1px solid #d6d3d1; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 5px rgba(41, 37, 36, 0.03); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <% if m.link.present? && find_youtube_url(m.link).present? %>
+                <iframe width="100%" height="165" 
+                        src="https://www.youtube.com/embed/<%= find_youtube_url(m.link) %>" 
+                        frameborder="0" allowfullscreen style="display: block;">
+                </iframe>
+              <% end %>
+              <div style="padding: 14px;">
+                <h4 class="font-serif-title" style="margin: 0 0 6px 0; color: #0f172a; font-size: 16px; line-height: 1.4; font-weight: 600;"><%= m.movietitle %></h4>
+                <p style="color: #78716c; font-size: 12px; margin: 0; line-height: 1.5;"><%= truncate(m.point, length: 45) %></p>
+              </div>
+            </div>
+            <div style="padding: 10px 14px; background: #f5f5f4; border-top: 1px solid #e7e5e4; text-align: right;">
+              <%= link_to "動画詳細へ", movie_path(m.id), class: "btn-action btn-show" %>
+            </div>
           </div>
-
-          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #e2e8f0; text-align: right;">
-            <%= link_to "詳細を見る", movie_path(m.id), style: "font-size: 13px; color: #0284c7; text-decoration: none; font-weight: bold;" %>
-          </div>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     <% else %>
-      <p style="color: #94a3b8;">まだ投稿された動画はありません</p>
+      <div style="background: #ffffff; border: 1px dashed #d6d3d1; border-radius: 4px; padding: 25px; text-align: center; color: #a8a29e; font-size: 14px;">
+        まだ投稿された動画はありません。
+      </div>
     <% end %>
   </div>
-</section>
+
+</div>
+
+<!-- 🎼 五線譜透かし用CSS -->
+<style>
+  .score-watermark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.05;
+    pointer-events: none;
+    background: 
+      repeating-linear-gradient(
+        0deg,
+        #ffffff,
+        #ffffff 1px,
+        transparent 1px,
+        transparent 6px
+      );
+    mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  }
+</style>

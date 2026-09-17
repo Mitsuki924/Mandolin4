@@ -1,23 +1,61 @@
-<h1>おすすめ動画の新規投稿</h1>
+<div class="movie-form-container card-box classic-paper-card" style="max-width: 740px; margin: 30px auto; padding: 40px 36px; border-radius: 4px;">
+  
+  <!-- 活版申請書ヘッダー -->
+  <div style="text-align: center; margin-bottom: 30px;">
+    <span class="font-cinzel" style="font-size: 11px; letter-spacing: 3px; color: #b45309; font-weight: 700; display: block; margin-bottom: 6px;">
+      ARCHIVE ENTRY &amp; REGISTRATION
+    </span>
+    <h2 class="font-serif-title" style="color: #0f172a; margin: 0 0 10px 0; font-size: 24px; font-weight: 700;">
+      演奏動画の登録
+    </h2>
+    <p style="margin: 0; color: #78716c; font-size: 13px;">
+      YouTubeに公開されているマンドリン演奏動画・アンサンブル演奏を共有します
+    </p>
 
-<%= form_for @movie do |f| %>
-  <div class="field">
-    <%= f.label :movietitle, "動画タイトル" %>
-    <%= f.text_field :movietitle, size: 30 %>
+    <!-- アンティーク・オーナメント罫線 -->
+    <div class="classic-divider" style="margin: 14px auto 0 auto;">
+      <span class="classic-divider-ornament">❖</span>
+    </div>
   </div>
 
-  <div class="field">
-    <%= f.label :link, "動画リンク (URL)" %>
-    <%= f.text_area :link, size: "30x2" %>
-  </div>
+  <%= form_with(model: @movie, local: true, style: "display: flex; flex-direction: column; gap: 20px;") do |f| %>
 
-  <div class="field">
-    <%= f.label :point, "おすすめポイント" %>
-    <%= f.text_area :point, size: "30x4" %>
-  </div>
+    <!-- 動画タイトル -->
+    <div>
+      <label class="classic-form-label">
+        動画タイトル <span class="classic-form-badge">REQUIRED</span>
+      </label>
+      <%= f.text_field :movietitle, placeholder: "例：劇的序曲（マネンテ）/ 〇〇マンドリンクラブ第50回定演", class: "classic-input", required: true %>
+    </div>
 
-  <%= f.submit "動画を投稿する" %>
-<% end %>
+    <!-- YouTube動画URL -->
+    <div>
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+        <label class="classic-form-label" style="margin-bottom: 0;">
+          YouTube URL <span class="classic-form-badge">REQUIRED</span>
+        </label>
+        <span style="font-size: 11px; color: #78716c;">通常URL、短縮URL（youtu.be）どちらも対応</span>
+      </div>
+      <%= f.text_field :link, placeholder: "例：https://www.youtube.com/watch?v=... または https://youtu.be/...", class: "classic-input", required: true %>
+    </div>
 
-<br>
-<%= link_to "トップに戻る", root_path %>
+    <!-- 演奏のポイント・紹介文 -->
+    <div>
+      <label class="classic-form-label">
+        演奏の聴きどころ・解説 <span class="classic-form-optional">（推奨）</span>
+      </label>
+      <%= f.text_area :point, rows: 5, placeholder: "例：第3マンドリンのソロの掛け合いや、中間部のマンドロンチェロの旋律にご注目ください。定期演奏会での熱演アーカイブです。", class: "classic-input", style: "line-height: 1.6;" %>
+    </div>
+
+    <!-- 送信ボタンエリア -->
+    <div style="margin-top: 14px; text-align: center;">
+      <%= f.submit "動画を登録・公開する", style: "background: linear-gradient(135deg, #0f172a, #1e293b); color: #ffffff; border: 1px solid #b45309; padding: 13px 36px; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; letter-spacing: 1px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);" %>
+      
+      <div style="margin-top: 16px;">
+        <%= link_to "動画一覧へ戻る", movies_path, class: "gold-underline-dark", style: "font-size: 13px;" %>
+      </div>
+    </div>
+
+  <% end %>
+
+</div>

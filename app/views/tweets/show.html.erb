@@ -1,23 +1,285 @@
-<h1>演奏会詳細</h1>
+<!-- 📚 書誌インデックス調パンくずリスト -->
+<%= render_breadcrumbs([
+  ["HOME", root_path],
+  ["CONCERTS", tweets_path],
+  [truncate((@tweet.title.presence || @tweet.name), length: 28), nil]
+]) %>
 
-<div class="tweet-detail" style="border: 1px solid #ccc; padding: 20px; border-radius: 8px; max-width: 600px;">
-  <h2><%= @tweet.title %></h2>
-  <p><strong>主催・団体名：</strong> <%= @tweet.name %></p>
-  <p><strong>日時：</strong> <%= @tweet.date %> <%= @tweet.time.strftime('%H:%M') if @tweet.time.present? %></p>
-  <p><strong>場所：</strong> <%= @tweet.place %></p>
-  <p><strong>アクセス：</strong> <%= @tweet.access %></p>
-  <p><strong>料金：</strong> <%= @tweet.price %></p>
+<div class="tweet-detail-container card-box classic-paper-card" style="max-width: 1040px; margin: 16px auto 30px auto; padding: 40px 36px; border-radius: 4px;">
   
-  <hr style="margin: 15px 0;">
-  
-  <p><strong>プログラム・曲目：</strong></p>
-  <p><%= simple_format(@tweet.program) %></p>
+  <!-- 表紙ヘッダー：タイトル＆主催 -->
+  <div style="text-align: center; margin-bottom: 26px;">
+    <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 8px;">
+      <span class="font-cinzel" style="font-size: 11px; letter-spacing: 2.5px; color: #b45309; font-weight: 700;">CONCERT PROGRAM</span>
+      <% if @tweet.area.present? %>
+        <span style="background: #ffffff; color: #475569; font-size: 11px; font-weight: 500; padding: 1px 8px; border-radius: 3px; border: 1px solid #cbd5e1;"><%= @tweet.area %></span>
+      <% end %>
+    </div>
+
+    <h1 class="font-serif-title" style="color: #0f172a; margin: 0 0 10px 0; font-size: 26px; font-weight: 700; line-height: 1.4;">
+      <%= @tweet.title.presence || @tweet.name %>
+    </h1>
+
+    <% if @tweet.name.present? && @tweet.title.present? %>
+      <p style="margin: 0; color: #78716c; font-size: 14px; font-weight: 500;">
+        主催：<%= @tweet.name %>
+      </p>
+    <% end %>
+
+    <!-- アンティーク・オーナメント罫線 -->
+    <div class="classic-divider">
+      <span class="classic-divider-ornament">❖</span>
+    </div>
+  </div>
+
+  <!-- 📖 2カラム見開きレイアウト -->
+  <div class="concert-spread">
+    
+    <!-- 左ページ：ビジュアル＆公演概要 -->
+    <div class="spread-left" style="display: flex; flex-direction: column; gap: 24px;">
+      
+      <!-- パンフレット画像（表面・裏面） -->
+      <% if @tweet.pamphlets.attached? %>
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <strong class="font-serif-title" style="font-size: 14px; color: #0f172a; font-weight: 700;">チラシ・フライヤー（<%= @tweet.pamphlets.count %>枚）</strong>
+            <span class="font-cinzel" style="font-size: 10px; color: #b45309; font-weight: 700; letter-spacing: 0.5px;">CLICK TO ENLARGE</span>
+          </div>
+
+          <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
+            <% @tweet.pamphlets.each_with_index do |p, index| %>
+              <div style="text-align: center; flex: 1; min-width: 140px; max-width: 220px;">
+                <span class="font-cinzel" style="display: inline-block; font-size: 10px; font-weight: 700; color: #78716c; margin-bottom: 5px; background: #f5f5f4; padding: 1px 8px; border-radius: 3px; letter-spacing: 0.5px;">
+                  <%= index == 0 ? "FRONT / 表面" : "BACK / 裏面" %>
+                </span>
+                <div>
+                  <button type="button" onclick="document.getElementById('dialog-<%= index %>').showModal()" style="background: none; border: none; padding: 0; cursor: pointer; outline: none; width: 100%;">
+                    <div class="paper-shadow paper-shadow-hover" style="border-radius: 4px; overflow: hidden; background: #ffffff;">
+                      <%= image_tag p, style: "width: 100%; height: auto; max-height: 300px; display: block; object-fit: cover;" %>
+                    </div>
+                  </button>
+                </div>
+
+                <!-- 拡大モーダル -->
+                <dialog id="dialog-<%= index %>" style="border: none; border-radius: 12px; padding: 10px; background: transparent; max-width: 95vw; max-height: 95vh; outline: none; overflow: visible;" onclick="if (event.target === this) this.close();">
+                  <div style="position: relative; display: inline-block;">
+                    <button type="button" onclick="document.getElementById('dialog-<%= index %>').close()" style="position: absolute; top: -14px; right: -14px; background: #0f172a; border: 2px solid #ffffff; color: #ffffff; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 10;">
+                      ✕
+                    </button>
+                    <%= image_tag p, style: "max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: block;" %>
+                  </div>
+                </dialog>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- 公演詳細インフォメーション -->
+      <div class="classic-paper-inner" style="padding: 20px; border-radius: 4px; border: 1px solid #e7e5e4; line-height: 1.8; font-size: 13.5px; color: #44403c;">
+        <h3 class="font-serif-title" style="margin: 0 0 12px 0; font-size: 15px; color: #0f172a; border-bottom: 1px solid #d6d3d1; padding-bottom: 6px; font-weight: 700;">
+          公演概要
+        </h3>
+
+        <!-- 日時 ＆ カレンダーリンク -->
+        <div style="margin-bottom: 10px;">
+          <strong style="color: #0f172a;">開催日時：</strong><br>
+          <span class="font-cinzel" style="font-weight: 600; font-size: 14px;"><%= @tweet.date %></span>
+          <% if @tweet.time.present? %>
+            ｜ 開演 <span class="font-cinzel" style="font-weight: 600; font-size: 14px;"><%= @tweet.time.strftime('%H:%M') %></span>
+          <% end %>
+
+          <% if @tweet.date.present? %>
+            <%
+              event_title = @tweet.title.presence || @tweet.name
+              if @tweet.time.present?
+                start_datetime = Time.zone.local(@tweet.date.year, @tweet.date.month, @tweet.date.day, @tweet.time.hour, @tweet.time.min)
+                end_datetime = start_datetime + 2.hours
+                dates_param = "#{start_datetime.utc.strftime('%Y%m%dT%H%M%SZ')}/#{end_datetime.utc.strftime('%Y%m%dT%H%M%SZ')}"
+              else
+                dates_param = "#{@tweet.date.strftime('%Y%m%d')}/#{(@tweet.date + 1.day).strftime('%Y%m%d')}"
+              end
+              cal_url = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=#{CGI.escape(event_title.to_s)}&dates=#{dates_param}&location=#{CGI.escape(@tweet.place.to_s)}&details=#{CGI.escape("主催: #{@tweet.name}\n場所: #{@tweet.place}\nチケット: #{@tweet.price}")}"
+            %>
+            <div style="margin-top: 5px;">
+              <%= link_to cal_url, target: "_blank", rel: "noopener noreferrer", class: "letterpress-btn", style: "background: #fef3c7; border: 1px solid #fde68a; color: #92400e; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center;" do %>
+                Googleカレンダーに追加 ↗
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- 会場 ＆ マップリンク -->
+        <div style="margin-bottom: 10px;">
+          <strong style="color: #0f172a;">会場：</strong><br>
+          <%= @tweet.place %>
+          <% if @tweet.place.present? %>
+            <div style="margin-top: 4px;">
+              <%= link_to "https://www.google.com/maps/search/?api=1&query=#{CGI.escape(@tweet.place)}", target: "_blank", rel: "noopener noreferrer", class: "letterpress-btn", style: "background: #ffffff; border: 1px solid #d6d3d1; color: #b45309; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center;" do %>
+                Googleマップ ↗
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- アクセス -->
+        <% if @tweet.access.present? %>
+          <div style="margin-bottom: 10px;">
+            <strong style="color: #0f172a;">交通アクセス：</strong><br>
+            <span style="color: #57534e;"><%= simple_format(@tweet.access) %></span>
+          </div>
+        <% end %>
+
+        <!-- 入場料 -->
+        <% if @tweet.price.present? %>
+          <div style="margin-bottom: 10px;">
+            <strong style="color: #0f172a;">入場料・チケット：</strong><br>
+            <%= @tweet.price %>
+          </div>
+        <% end %>
+
+        <!-- 公式HP・SNSリンク -->
+        <% if @tweet.website_url.present? %>
+          <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed #d6d3d1;">
+            <strong style="color: #0f172a;">公式リンク：</strong><br>
+            <div style="margin-top: 4px;">
+              <%= link_to @tweet.website_url, target: "_blank", rel: "noopener noreferrer", class: "letterpress-btn", style: "background: #0f172a; border: 1px solid #b45309; color: #f8fafc; padding: 4px 12px; border-radius: 3px; font-size: 11px; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center;" do %>
+                Official Website / SNS ↗
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <div style="margin-top: 12px; font-size: 11px; color: #78716c;">
+          投稿者：<%= @tweet.user.email if @tweet.user.present? %>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 右ページ：端正なプログラム組版 -->
+    <div class="spread-right">
+      <div class="classic-paper-inner" style="padding: 26px 24px; border-radius: 4px; border: 1px solid #e7e5e4; border-left: 3px solid #b45309; height: 100%; box-sizing: border-box;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; border-bottom: 1px solid #d6d3d1; padding-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+          <div>
+            <span class="font-cinzel" style="font-size: 10px; letter-spacing: 1.5px; color: #b45309; font-weight: 700; display: block;">PROGRAMME</span>
+            <h3 class="font-serif-title" style="color: #0f172a; margin: 0; font-size: 18px; font-weight: 700;">演奏曲目</h3>
+          </div>
+          <span style="font-size: 11px; color: #78716c;">各曲の演奏動画を試聴・予習できます</span>
+        </div>
+
+        <% if @tweet.program.present? %>
+          <div style="color: #292524; line-height: 2.3; font-size: 14px;">
+            <%= render_program_with_links(@tweet.program) %>
+          </div>
+        <% else %>
+          <p style="color: #a8a29e; font-size: 13px; margin: 0;">曲目情報はまだ登録されていません。</p>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 見開きと操作エリアの間のアンティーク・オーナメント罫線 -->
+  <div class="classic-divider" style="margin: 32px auto 20px auto;">
+    <span class="classic-divider-ornament">❖</span>
+  </div>
+
+  <!-- 操作バー -->
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+    <div>
+      <% if user_signed_in? %>
+        <% if current_user.already_liked?(@tweet) %>
+          <%= button_to tweet_likes_path(@tweet), method: :delete, class: "letterpress-btn", style: "background: #fee2e2; border: 1px solid #fca5a5; color: #dc2626; padding: 5px 16px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;" do %>
+            保存済み (<%= @tweet.likes.count %>)
+          <% end %>
+        <% else %>
+          <%= button_to tweet_likes_path(@tweet), method: :post, class: "letterpress-btn", style: "background: #ffffff; border: 1px solid #d6d3d1; color: #57534e; padding: 5px 16px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;" do %>
+            気になる (<%= @tweet.likes.count %>)
+          <% end %>
+        <% end %>
+      <% else %>
+        <%= link_to new_user_session_path, class: "letterpress-btn", style: "background: #ffffff; border: 1px solid #d6d3d1; color: #a8a29e; padding: 5px 16px; border-radius: 4px; text-decoration: none; font-size: 13px; display: inline-flex;" do %>
+          気になる (<%= @tweet.likes.count %>)
+        <% end %>
+      <% end %>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <%= link_to "演奏会一覧へ戻る", tweets_path, class: "gold-underline-dark", style: "font-weight: 600; font-size: 14px;" %>
+
+      <% if user_signed_in? && current_user.id == @tweet.user_id %>
+        <%= link_to "編集", edit_tweet_path(@tweet.id), class: "btn-action btn-edit" %>
+        <%= button_to "削除", tweet_path(@tweet.id), method: :delete, data: { turbo_confirm: "本当にこの演奏会情報を削除しますか？" }, class: "btn-action btn-delete" %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- コメント・メッセージエリア -->
+  <div style="margin-top: 36px; padding-top: 25px; border-top: 2px dashed #d6d3d1;">
+    <h3 class="font-serif-title" style="color: #0f172a; margin-top: 0; font-size: 18px; font-weight: 700;">
+      コメント・メッセージ（<%= @tweet.comments.count %>件）
+    </h3>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px; margin-bottom: 25px;">
+      <% if @tweet.comments.present? %>
+        <% @tweet.comments.each do |c| %>
+          <div style="background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 4px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <div style="font-size: 13px; color: #78716c; margin-bottom: 4px;">
+                <strong><%= c.user.email.split('@').first %></strong> 
+                <span class="font-cinzel" style="font-size: 11px; margin-left: 6px;"><%= c.created_at.strftime('%Y/%m/%d %H:%M') %></span>
+              </div>
+              <div style="font-size: 14px; color: #292524; line-height: 1.5; white-space: pre-wrap;"><%= c.content %></div>
+            </div>
+
+            <% if user_signed_in? && current_user.id == c.user_id %>
+              <%= button_to "削除", tweet_comment_path(@tweet, c), method: :delete, data: { turbo_confirm: "コメントを削除しますか？" }, style: "background: none; border: none; color: #dc2626; font-size: 12px; cursor: pointer; padding: 0 4px; text-decoration: underline;" %>
+            <% end %>
+          </div>
+        <% end %>
+      <% else %>
+        <p style="color: #a8a29e; font-size: 13px; margin: 0;">まだコメントはありません。</p>
+      <% end %>
+    </div>
+
+    <% if user_signed_in? %>
+      <div style="background: #f5f5f4; border: 1px solid #e7e5e4; border-radius: 6px; padding: 16px;">
+        <%= form_with(model: [@tweet, Comment.new], local: true) do |f| %>
+          <div style="margin-bottom: 10px;">
+            <%= f.text_area :content, rows: 3, placeholder: "メッセージや感想を入力してください", class: "classic-input" %>
+          </div>
+          <div style="text-align: right;">
+            <%= f.submit "メッセージを送信", style: "background: #0f172a; color: #fff; border: 1px solid #b45309; padding: 8px 18px; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer;" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div style="background: #fafaf9; border: 1px dashed #d6d3d1; padding: 15px; border-radius: 6px; text-align: center; font-size: 13px; color: #78716c;">
+        コメントを投稿するには <%= link_to "ログイン", new_user_session_path, style: "color: #b45309; font-weight: bold;" %> してください。
+      </div>
+    <% end %>
+  </div>
+
 </div>
 
-<br>
-<%= link_to "演奏会一覧に戻る", tweets_path %>
+<style>
+  .concert-spread {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
 
-<div style="margin-top: 20px;">
-  <%= link_to "編集する", edit_tweet_path(@tweet.id), style: "margin-right: 15px; color: #16a34a; font-weight: bold;" %>
-  <%= link_to "演奏会一覧に戻る", tweets_path %>
-</div>
+  @media (min-width: 768px) {
+    .concert-spread {
+      grid-template-columns: 1.1fr 1.2fr;
+      gap: 32px;
+      align-items: start;
+    }
+  }
+
+  dialog::backdrop {
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(4px);
+  }
+</style>

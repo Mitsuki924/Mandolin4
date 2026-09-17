@@ -1,48 +1,66 @@
-<h1 class="page-title">演奏動画一覧</h1>
+<div class="page-container" style="max-width: 960px; margin: 0 auto; padding: 20px 10px;">
+  <!-- 見出し ＆ 投稿ボタン -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 10px;">
+    <div>
+      <h2 class="font-serif-title" style="color: #0f172a; margin: 0; font-size: 22px; letter-spacing: 0.5px; font-weight: 700;">演奏動画アーカイブ</h2>
+      <p style="margin: 4px 0 0 0; color: #78716c; font-size: 13px;">マンドリンオーケストラ・アンサンブルの名演奏アーカイブ</p>
+    </div>
+    <% if user_signed_in? %>
+      <%= link_to "演奏動画を投稿する", new_movie_path, class: "letterpress-btn", style: "background: #334155; color: #f8fafc; border: 1px solid #64748b; padding: 9px 18px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);" %>
+    <% end %>
+  </div>
 
-<div class="action-nav">
-  <%= link_to "動画を新規投稿", new_movie_path, class: "btn-primary" %>
-  <%= link_to "🎻 演奏会一覧へ戻る", tweets_path, class: "btn-secondary" %>
-</div>
-
-<div class="movies-container">
-  <h3>おすすめ動画一覧</h3>
-
-  <% @movies.each do |m| %>
-    <div class="movie-card">
-      <div class="movie-main-box">
-        <!-- 👈 左側：YouTube動画プレイヤー -->
-        <div class="movie-player-container">
-          <% if m.link.present? && find_youtube_url(m.link).present? %>
-            <iframe width="100%" height="180" 
-                    src="https://www.youtube.com/embed/<%= find_youtube_url(m.link) %>" 
-                    frameborder="0" allowfullscreen style="border-radius: 6px;">
-            </iframe>
-          <% else %>
-            <div class="no-video-box">動画がありません</div>
-          <% end %>
-        </div>
-
-        <!-- 👉 右側：動画情報と操作ボタン -->
-        <div class="movie-info-container">
-          <p class="poster">👤 投稿者: <%= m.user.email if m.user.present? %></p>
-          <h4 class="movie-title"><%= m.movietitle %></h4>
-          
-          <div class="movie-point-box">
-            <strong>見どころ・ポイント：</strong>
-            <p><%= simple_format(truncate(m.point, length: 80)) %></p>
+  <!-- 動画グリッド -->
+  <% if @movies.present? %>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      <% @movies.each do |m| %>
+        <div class="classic-paper-inner" style="border: 1px solid #d6d3d1; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 5px rgba(41, 37, 36, 0.03); display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <% if m.link.present? && find_youtube_url(m.link).present? %>
+              <iframe width="100%" height="180" 
+                      src="https://www.youtube.com/embed/<%= find_youtube_url(m.link) %>" 
+                      frameborder="0" allowfullscreen style="display: block;">
+              </iframe>
+            <% end %>
+            <div style="padding: 16px;">
+              <h3 class="font-serif-title" style="margin: 0 0 8px 0; color: #0f172a; font-size: 16.5px; line-height: 1.4; font-weight: 600;">
+                <%= link_to m.movietitle, movie_path(m.id), class: "serif-hover", style: "color: #0f172a; text-decoration: none;" %>
+              </h3>
+              <p style="color: #78716c; font-size: 12.5px; margin: 0; line-height: 1.6;"><%= truncate(m.point, length: 60) %></p>
+            </div>
           </div>
-
-          <div class="movie-actions">
-            <%= link_to "詳細", movie_path(m.id), class: "btn-action btn-show" %>
-            <%= link_to "編集", edit_movie_path(m.id), class: "btn-action btn-edit" %>
-            <%= button_to "削除", movie_path(m.id), method: :delete, data: { turbo_confirm: "本当にこの動画を削除しますか？" }, class: "btn-action btn-delete" %>
+          <div style="padding: 10px 16px; background: #f5f5f4; border-top: 1px solid #e7e5e4; display: flex; justify-content: space-between; align-items: center;">
+            <span class="font-cinzel" style="font-size: 11px; color: #a8a29e;"><%= m.created_at.strftime('%Y.%m.%d') %></span>
+            <%= link_to "動画詳細へ", movie_path(m.id), class: "btn-action btn-show" %>
           </div>
         </div>
+      <% end %>
+    </div>
+  <% else %>
+    <!-- 📜 クラシック洋書扉絵風の空状態（No Entries） -->
+    <div class="classic-paper-card" style="text-align: center; padding: 50px 30px; border-radius: 4px; max-width: 580px; margin: 30px auto;">
+      <span class="font-cinzel" style="font-size: 11px; letter-spacing: 3.5px; color: #b45309; font-weight: 700; display: block; margin-bottom: 8px;">
+        NO ARCHIVES FOUND
+      </span>
+      <h3 class="font-serif-title" style="color: #0f172a; margin: 0 0 10px 0; font-size: 19px; font-weight: 700;">
+        登録されている演奏動画はありません
+      </h3>
+      <p style="color: #78716c; font-size: 13.5px; line-height: 1.7; margin: 0 auto; max-width: 420px;">
+        現在公開されている動画アーカイブはまだありません。<br>
+        お気に入りの演奏動画や定期演奏会の記録を最初のアーカイブとして共有してみましょう。
+      </p>
+
+      <div class="classic-divider" style="margin: 18px auto 22px auto; max-width: 260px;">
+        <span class="classic-divider-ornament">❖</span>
       </div>
 
-      <!-- 🕒 投稿日時（右寄せ） -->
-      <p class="time">投稿日時: <%= m.created_at.strftime('%Y/%m/%d %H:%M') %></p>
+      <div>
+        <% if user_signed_in? %>
+          <%= link_to "最初の動画を登録する", new_movie_path, class: "letterpress-btn", style: "background: #0f172a; color: #ffffff; border: 1px solid #b45309; padding: 9px 24px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: bold; display: inline-block;" %>
+        <% else %>
+          <%= link_to "ログインして動画を投稿する", new_user_session_path, class: "letterpress-btn", style: "background: #0f172a; color: #ffffff; border: 1px solid #b45309; padding: 9px 24px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: bold; display: inline-block;" %>
+        <% end %>
+      </div>
     </div>
   <% end %>
 </div>

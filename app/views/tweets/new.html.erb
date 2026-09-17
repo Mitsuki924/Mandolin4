@@ -1,54 +1,138 @@
-<div class="post-container">
-  <p class="title">🎺 演奏会の新規投稿</p>
+<div class="tweet-form-container card-box classic-paper-card" style="max-width: 740px; margin: 30px auto; padding: 40px 36px; border-radius: 4px;">
+  
+  <!-- 活版申請書ヘッダー -->
+  <div style="text-align: center; margin-bottom: 30px;">
+    <span class="font-cinzel" style="font-size: 11px; letter-spacing: 3px; color: #b45309; font-weight: 700; display: block; margin-bottom: 6px;">
+      ENTRY &amp; REGISTRATION
+    </span>
+    <h2 class="font-serif-title" style="color: #0f172a; margin: 0 0 10px 0; font-size: 24px; font-weight: 700;">
+      演奏会情報の登録
+    </h2>
+    <p style="margin: 0; color: #78716c; font-size: 13px;">
+      定期演奏会・アンサンブル公演のスケジュールや曲目、チラシを掲載します
+    </p>
 
-  <%= form_for(@tweet, url: tweets_path) do |f| %>
-    <div class="form-group">
-      <%= f.label :name, "団体名・主催" %>
-      <%= f.text_field :name, placeholder: "例：〇〇マンドリンクラブ" %>
+    <!-- アンティーク・オーナメント罫線 -->
+    <div class="classic-divider" style="margin: 14px auto 0 auto;">
+      <span class="classic-divider-ornament">❖</span>
+    </div>
+  </div>
+
+  <%= form_with(model: @tweet, local: true, style: "display: flex; flex-direction: column; gap: 20px;") do |f| %>
+
+    <!-- 演奏会タイトル -->
+    <div>
+      <label class="classic-form-label">
+        演奏会タイトル <span class="classic-form-badge">REQUIRED</span>
+      </label>
+      <%= f.text_field :title, placeholder: "例：第48回定期演奏会、スプリングコンサート2026", class: "classic-input", required: true %>
     </div>
 
-    <div class="form-group">
-      <%= f.label :title, "演奏会名" %>
-      <%= f.text_field :title, placeholder: "例：第〇回 定期演奏会" %>
+    <!-- 主催・団体名 -->
+    <div>
+      <label class="classic-form-label">
+        主催・団体名 <span class="classic-form-badge">REQUIRED</span>
+      </label>
+      <%= f.text_field :name, placeholder: "例：〇〇マンドリンクラブ、〇〇ギターマンドリン合奏団", class: "classic-input", required: true %>
     </div>
 
-    <div class="form-group-inline">
-      <div class="form-group-half">
-        <%= f.label :date, "開催日程" %>
-        <%= f.date_field :date %>
+    <!-- 開催地域（エリア） -->
+    <div>
+      <label class="classic-form-label">
+        開催地域（エリア） <span class="classic-form-badge">REQUIRED</span>
+      </label>
+      <%= f.select :area, [
+        ["選択してください", ""],
+        ["東京都", "東京都"],
+        ["千葉県", "千葉県"],
+        ["神奈川県", "神奈川県"],
+        ["埼玉県", "埼玉県"],
+        ["関東その他", "関東その他"],
+        ["近畿・関西", "近畿・関西"],
+        ["東海・中部", "東海・中部"],
+        ["その他", "その他"]
+      ], {}, class: "classic-input", style: "cursor: pointer;", required: true %>
+    </div>
+
+    <!-- 開催日 ＆ 開演時刻（横並び） -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div>
+        <label class="classic-form-label">
+          開催日 <span class="classic-form-badge">REQUIRED</span>
+        </label>
+        <%= f.date_field :date, class: "classic-input", required: true %>
       </div>
-      <div class="form-group-half">
-        <%= f.label :time, "開演時間" %>
-        <%= f.time_field :time %>
+      <div>
+        <label class="classic-form-label">
+          開演時刻 <span class="classic-form-optional">（任意）</span>
+        </label>
+        <%= f.time_field :time, class: "classic-input" %>
       </div>
     </div>
 
-    <div class="form-group">
-      <%= f.label :place, "開催場所（ホール名等）" %>
-      <%= f.text_field :place, placeholder: "例：市民会館 大ホール" %>
+    <!-- 会場 -->
+    <div>
+      <label class="classic-form-label">
+        会場 <span class="classic-form-badge">REQUIRED</span>
+      </label>
+      <%= f.text_field :place, placeholder: "例：〇〇市民会館 大ホール、すみだトリフォニーホール", class: "classic-input", required: true %>
     </div>
 
-    <div class="form-group">
-      <%= f.label :access, "アクセス" %>
-      <%= f.text_field :access, placeholder: "例：〇〇駅 徒歩5分" %>
+    <!-- 交通アクセス -->
+    <div>
+      <label class="classic-form-label">
+        交通アクセス <span class="classic-form-optional">（任意）</span>
+      </label>
+      <%= f.text_area :access, rows: 2, placeholder: "例：JR〇〇駅 西口より徒歩5分、地下鉄〇〇線〇〇駅 直結", class: "classic-input" %>
     </div>
 
-    <div class="form-group">
-      <%= f.label :price, "入場料・チケット" %>
-      <%= f.text_field :price, placeholder: "例：入場無料（全席自由）" %>
+    <!-- 入場料・チケット代 -->
+    <div>
+      <label class="classic-form-label">
+        入場料・チケット代 <span class="classic-form-optional">（任意）</span>
+      </label>
+      <%= f.text_field :price, placeholder: "例：入場無料（全席自由）、一般 1,000円 / 学生無料", class: "classic-input" %>
     </div>
 
-    <div class="form-group">
-      <%= f.label :program, "曲目・プログラム" %>
-      <%= f.text_area :program, rows: 4, placeholder: "例：1部：マンドリンオーケストラ曲..." %>
+    <!-- 公式HP・SNSリンク -->
+    <div>
+      <label class="classic-form-label">
+        公式ウェブサイト / SNSリンク <span class="classic-form-optional">（任意）</span>
+      </label>
+      <%= f.url_field :website_url, placeholder: "https://example.com や Twitter/Instagram のURL", class: "classic-input" %>
     </div>
 
-    <div class="submit-box">
-      <%= f.submit "演奏会を投稿する" %>
+    <!-- 演奏曲目・プログラム -->
+    <div>
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+        <label class="classic-form-label" style="margin-bottom: 0;">
+          プログラム・演奏曲目 <span class="classic-form-optional">（推奨）</span>
+        </label>
+        <span style="font-size: 11px; color: #78716c;">「曲名 / 作曲者」の形式で自動整形されます</span>
+      </div>
+      <%= f.text_area :program, rows: 6, placeholder: "例：\n第1部\nレナータ / G.マネンテ\n杜の鼓動 / 藤掛廣幸\n\n第2部\nグランドシャコンヌ / 鈴木静一", class: "classic-input", style: "line-height: 1.6;" %>
     </div>
+
+    <!-- パンフレット画像（複数添付） -->
+    <div class="classic-paper-inner" style="padding: 16px; border: 1px dashed #d6d3d1; border-radius: 4px;">
+      <label class="classic-form-label" style="margin-bottom: 4px;">
+        パンフレット・チラシ画像（表面・裏面）
+      </label>
+      <p style="font-size: 12px; color: #78716c; margin: 0 0 10px 0;">
+        表面と裏面の2枚を同時に選択してアップロードできます（jpg, png形式）
+      </p>
+      <%= f.file_field :pamphlets, multiple: true, accept: "image/*", style: "font-size: 13px; color: #44403c;" %>
+    </div>
+
+    <!-- 送信ボタンエリア -->
+    <div style="margin-top: 14px; text-align: center;">
+      <%= f.submit "演奏会情報を登録・公開する", style: "background: linear-gradient(135deg, #0f172a, #1e293b); color: #ffffff; border: 1px solid #b45309; padding: 13px 36px; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; letter-spacing: 1px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);" %>
+      
+      <div style="margin-top: 16px;">
+        <%= link_to "一覧へ戻る", tweets_path, class: "gold-underline-dark", style: "font-size: 13px;" %>
+      </div>
+    </div>
+
   <% end %>
 
-  <div style="margin-bottom: 20px; text-align: center;">
-    <%= link_to "演奏会一覧に戻る", tweets_path, style: "color: #2563eb; text-decoration: none; font-size: 14px;" %>
-  </div>
 </div>

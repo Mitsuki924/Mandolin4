@@ -1,26 +1,58 @@
-<h1>おすすめ動画の編集</h1>
+<div class="movie-form-container card-box classic-paper-card" style="max-width: 740px; margin: 30px auto; padding: 40px 36px; border-radius: 4px;">
+  
+  <!-- 活版編集ヘッダー -->
+  <div style="text-align: center; margin-bottom: 30px;">
+    <span class="font-cinzel" style="font-size: 11px; letter-spacing: 3px; color: #b45309; font-weight: 700; display: block; margin-bottom: 6px;">
+      EDIT MOVIE ENTRY
+    </span>
+    <h2 class="font-serif-title" style="color: #0f172a; margin: 0 0 10px 0; font-size: 24px; font-weight: 700;">
+      演奏動画の編集
+    </h2>
+    <p style="margin: 0; color: #78716c; font-size: 13px;">
+      登録されている動画のタイトルや紹介文を更新します
+    </p>
 
-<%= form_for @movie do |f| %>
-  <div class="field" style="margin-bottom: 15px;">
-    <%= f.label :movietitle, "動画タイトル" %><br>
-    <%= f.text_field :movietitle, size: 40 %>
+    <!-- アンティーク・オーナメント罫線 -->
+    <div class="classic-divider" style="margin: 14px auto 0 auto;">
+      <span class="classic-divider-ornament">❖</span>
+    </div>
   </div>
 
-  <div class="field" style="margin-bottom: 15px;">
-    <%= f.label :link, "動画リンク (YouTube URL)" %><br>
-    <%= f.text_field :link, size: 60 %>
-  </div>
+  <%= form_with(model: @movie, local: true, style: "display: flex; flex-direction: column; gap: 20px;") do |f| %>
 
-  <div class="field" style="margin-bottom: 15px;">
-    <%= f.label :point, "おすすめポイント・見どころ" %><br>
-    <%= f.text_area :point, size: "50x5" %>
-  </div>
+    <!-- 動画タイトル -->
+    <div>
+      <label class="classic-form-label">
+        動画タイトル <span class="classic-form-badge">REQUIRED</span>
+      </label>
+      <%= f.text_field :movietitle, class: "classic-input", required: true %>
+    </div>
 
-  <div style="margin-top: 15px;">
-    <%= f.submit "動画情報を更新する" %>
-  </div>
-<% end %>
+    <!-- YouTube動画URL -->
+    <div>
+      <label class="classic-form-label">
+        YouTube URL <span class="classic-form-badge">REQUIRED</span>
+      </label>
+      <%= f.text_field :link, class: "classic-input", required: true %>
+    </div>
 
-<br>
-<%= link_to "詳細に戻る", movie_path(@movie.id) %> | 
-<%= link_to "動画一覧に戻る", movies_path %>
+    <!-- 演奏のポイント・紹介文 -->
+    <div>
+      <label class="classic-form-label">
+        演奏の聴きどころ・解説 <span class="classic-form-optional">（推奨）</span>
+      </label>
+      <%= f.text_area :point, rows: 5, class: "classic-input", style: "line-height: 1.6;" %>
+    </div>
+
+    <!-- 送信ボタンエリア -->
+    <div style="margin-top: 14px; text-align: center;">
+      <%= f.submit "動画情報を更新する", style: "background: linear-gradient(135deg, #0f172a, #1e293b); color: #ffffff; border: 1px solid #b45309; padding: 13px 36px; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; letter-spacing: 1px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);" %>
+      
+      <div style="margin-top: 16px;">
+        <%= link_to "キャンセルして戻る", movie_path(@movie.id), class: "gold-underline-dark", style: "font-size: 13px;" %>
+      </div>
+    </div>
+
+  <% end %>
+
+</div>

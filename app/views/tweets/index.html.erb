@@ -1,67 +1,189 @@
-<h1 class="page-title">マンドリン演奏会</h1>
-
-<div class="action-nav">
-  <%= link_to "新規投稿へ", new_tweet_path, class: "btn-primary" %>
-  <%= link_to "🎬 演奏動画一覧へ移動", movies_path, class: "btn-secondary" %>
-</div>
-
-<!-- 📅 カレンダー表示 -->
-<%= month_calendar(events: @tweets) do |date, tweets| %>
-  <div class="calendar-date"><%= date.day %></div>
-
-  <% tweets.each do |t| %>
-    <div class="calendar-event-pill">
-      <%= t.title.presence || t.name %>
+<div class="page-container" style="max-width: 920px; margin: 0 auto; padding: 20px 10px;">
+  <!-- 見出し ＆ 投稿ボタン -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 10px;">
+    <div>
+      <h2 class="font-serif-title" style="color: #0f172a; margin: 0; font-size: 22px; letter-spacing: 0.5px; font-weight: 700;">演奏会情報</h2>
+      <p style="margin: 4px 0 0 0; color: #78716c; font-size: 13px;">全国のマンドリン演奏会・定期演奏会のスケジュール一覧</p>
     </div>
-  <% end %>
-<% end %>
+    <% if user_signed_in? %>
+      <%= link_to "演奏会を投稿する", new_tweet_path, class: "letterpress-btn", style: "background: #f59e0b; color: #fff; padding: 9px 18px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.25);" %>
+    <% end %>
+  </div>
 
-<hr style="margin: 30px 0; border: none; border-top: 1px solid #e2e8f0;">
+  <!-- キーワード検索ボックス -->
+  <div class="classic-paper-inner" style="border: 1px solid #d6d3d1; border-radius: 6px; padding: 16px; margin-bottom: 16px;">
+    <%= form_with(url: tweets_path, method: :get, local: true, style: "display: flex; gap: 10px; align-items: center; flex-wrap: wrap;") do |f| %>
+      <%= f.hidden_field :tab, value: @tab %>
+      <%= f.hidden_field :area, value: @area if @area.present? %>
+      <div style="flex: 1; min-width: 250px;">
+        <%= f.text_field :search, value: params[:search], placeholder: "演奏会名、団体名、曲目、会場などで検索...", style: "width: 100%; box-sizing: border-box; padding: 10px 14px; border: 1px solid #d6d3d1; border-radius: 4px; font-size: 14px; outline: none; background: #ffffff;" %>
+      </div>
+      <%= f.submit "検索", class: "letterpress-btn", style: "background: #0f172a; color: #ffffff; border: 1px solid #b45309; padding: 10px 22px; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer;" %>
+      <% if params[:search].present? || @area.present? %>
+        <%= link_to "クリア", tweets_path(tab: @tab), class: "gold-underline-dark", style: "font-size: 14px; padding: 8px;" %>
+      <% end %>
+    <% end %>
 
-<div class="tweets-container">
-  <h3>演奏会一覧</h3>
+    <% if params[:search].present? || @area.present? %>
+      <p style="margin: 10px 0 0 0; font-size: 13px; color: #57534e;">
+        <% if @area.present? %><span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 4px; margin-right: 6px; font-weight: bold;"><%= @area %></span><% end %>
+        <% if params[:search].present? %>「<strong><%= params[:search] %></strong>」の<% end %>
+        検索結果：<strong><%= @tweets.count %></strong> 件
+      </p>
+    <% end %>
+  </div>
 
-  <% @tweets.each do |t| %>
-    <div class="tweet">
-      <div class="main-box">
-        <!-- 👈 左側：演奏会情報 -->
-        <div class="left-container">
-          <p class="poster">👤 投稿者: <%= t.user.email if t.user.present? %></p>
-          <h4 class="concert-title"><%= t.title.presence || t.name %></h4>
-          <p class="concert-info"><strong>団体名：</strong><%= t.name %></p>
-          <p class="concert-info"><strong>日時：</strong><%= t.date %> <%= t.time.strftime('%H:%M') if t.time.present? %></p>
-          <p class="concert-info"><strong>場所：</strong><%= t.place %></p>
-          <p class="concert-info"><strong>曲目：</strong><%= t.program %></p>
-          <p class="concert-info"><strong>料金：</strong><%= t.price %></p>
-          <p class="concert-info"><strong>アクセス：</strong><%= t.access %></p>
+  <!-- 地域（エリア）絞り込みタグバー -->
+  <div style="margin-bottom: 22px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+    <span class="font-cinzel" style="font-size: 11px; font-weight: 700; color: #78716c; margin-right: 4px; letter-spacing: 1px;">AREA:</span>
+    <%= link_to "すべて", tweets_path(tab: @tab, search: params[:search]), class: "letterpress-btn", style: "padding: 4px 10px; font-size: 12px; border-radius: 4px; text-decoration: none; font-weight: 500; background: #{@area.blank? ? '#0f172a' : '#ffffff'}; color: #{@area.blank? ? '#ffffff' : '#57534e'}; border: 1px solid #{@area.blank? ? '#0f172a' : '#d6d3d1'};" %>
+    <% ["東京都", "千葉県", "神奈川県", "埼玉県", "関東その他", "近畿・関西", "東海・中部", "その他"].each do |ar| %>
+      <%= link_to ar, tweets_path(tab: @tab, area: ar, search: params[:search]), class: "letterpress-btn", style: "padding: 4px 10px; font-size: 12px; border-radius: 4px; text-decoration: none; font-weight: 500; background: #{@area == ar ? '#0f172a' : '#ffffff'}; color: #{@area == ar ? '#ffffff' : '#57534e'}; border: 1px solid #{@area == ar ? '#0f172a' : '#d6d3d1'};" %>
+    <% end %>
+  </div>
 
-          <!-- 💖 ここが「気になる！」ボタンエリア！ -->
-          <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px;">
-            <% if user_signed_in? %>
-              <% if current_user.already_liked?(t) %>
-                <%= button_to tweet_likes_path(t), method: :delete, style: "background: #fee2e2; border: 1px solid #fca5a5; color: #ef4444; padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center;" do %>
-                  ❤️ 気になる！済 (<%= t.likes.count %>)
+  <!-- タブ切り替え -->
+  <div style="display: flex; gap: 10px; border-bottom: 2px solid #e7e5e4; margin-bottom: 22px;">
+    <%= link_to tweets_path(tab: "upcoming", area: @area, search: params[:search]), style: "padding: 10px 20px; text-decoration: none; font-weight: bold; font-size: 14px; border-bottom: 3px solid #{@tab == 'upcoming' ? '#b45309' : 'transparent'}; color: #{@tab == 'upcoming' ? '#b45309' : '#78716c'}; margin-bottom: -2px; display: inline-flex; align-items: center; gap: 6px;" do %>
+      これからの演奏会
+      <span class="font-cinzel" style="background: <%= @tab == 'upcoming' ? '#fef3c7' : '#ffffff' %>; color: <%= @tab == 'upcoming' ? '#92400e' : '#78716c' %>; padding: 1px 7px; border-radius: 3px; font-size: 12px; border: 1px solid <%= @tab == 'upcoming' ? '#fde68a' : '#d6d3d1' %>; font-weight: 700;"><%= @upcoming_count %></span>
+    <% end %>
+
+    <%= link_to tweets_path(tab: "past", area: @area, search: params[:search]), style: "padding: 10px 20px; text-decoration: none; font-weight: bold; font-size: 14px; border-bottom: 3px solid #{@tab == 'past' ? '#b45309' : 'transparent'}; color: #{@tab == 'past' ? '#b45309' : '#78716c'}; margin-bottom: -2px; display: inline-flex; align-items: center; gap: 6px;" do %>
+      過去の演奏会
+      <span class="font-cinzel" style="background: <%= @tab == 'past' ? '#fef3c7' : '#ffffff' %>; color: <%= @tab == 'past' ? '#92400e' : '#78716c' %>; padding: 1px 7px; border-radius: 3px; font-size: 12px; border: 1px solid <%= @tab == 'past' ? '#fde68a' : '#d6d3d1' %>; font-weight: 700;"><%= @past_count %></span>
+    <% end %>
+  </div>
+
+  <!-- 演奏会リスト（四隅コーナー装飾付き） -->
+  <div class="tweets-container" style="display: flex; flex-direction: column; gap: 15px;">
+    <% if @tweets.present? %>
+      <% @tweets.each do |t| %>
+        <div class="tweet classic-paper-inner corner-ornament-card" style="border: 1px solid #d6d3d1; border-radius: 4px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; box-shadow: 0 2px 5px rgba(41, 37, 36, 0.03);">
+          
+          <div style="display: flex; gap: 16px; align-items: center; flex: 1; min-width: 280px;">
+            <!-- サムネイル -->
+            <div class="paper-shadow paper-shadow-hover" style="flex-shrink: 0; width: 90px; height: 120px; border-radius: 4px; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; position: relative;">
+              <% if t.pamphlets.attached? %>
+                <%= link_to tweet_path(t.id), style: "width: 100%; height: 100%; display: block;" do %>
+                  <%= image_tag t.pamphlets.first, style: "width: 100%; height: 100%; object-fit: cover; display: block;" %>
+                <% end %>
+                <% if t.pamphlets.count > 1 %>
+                  <span class="font-cinzel" style="position: absolute; bottom: 4px; right: 4px; background: rgba(15, 23, 42, 0.85); color: #fff; font-size: 9px; padding: 1px 5px; border-radius: 3px; letter-spacing: 0.5px;">2 PAGES</span>
                 <% end %>
               <% else %>
-                <%= button_to tweet_likes_path(t), method: :post, style: "background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center;" do %>
-                  🤍 気になる！ (<%= t.likes.count %>)
-                <% end %>
+                <div class="font-cinzel" style="text-align: center; color: #a8a29e; font-size: 10px; font-weight: 700; letter-spacing: 0.5px;">
+                  NO IMAGE
+                </div>
               <% end %>
-            <% else %>
-              <span style="font-size: 13px; color: #94a3b8;">❤️ 気になる！: <%= t.likes.count %>件</span>
+            </div>
+
+            <!-- 演奏会情報 -->
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap;">
+                <h3 class="concert-title font-serif-title" style="margin: 0; font-size: 18px; font-weight: 600;">
+                  <%= link_to (t.title.presence || t.name), tweet_path(t.id), class: "serif-hover", style: "color: #0f172a; text-decoration: none;" %>
+                </h3>
+
+                <!-- エリアバッジ -->
+                <% if t.area.present? %>
+                  <span style="background: #ffffff; color: #475569; font-size: 11px; font-weight: 500; padding: 1px 7px; border-radius: 3px; border: 1px solid #cbd5e1;"><%= t.area %></span>
+                <% end %>
+
+                <!-- チケット半券風カウントダウンバッジ -->
+                <% if t.date.present? %>
+                  <% days_left = (t.date - Date.today).to_i %>
+                  <% if days_left == 0 %>
+                    <div style="display: inline-flex; align-items: center; border: 1px solid #ef4444; border-left: 3px solid #ef4444; background: #fef2f2; padding: 2px 8px; border-radius: 3px;">
+                      <span class="font-cinzel" style="font-size: 10px; font-weight: 700; color: #dc2626; letter-spacing: 1px;">TODAY</span>
+                      <span style="font-size: 11px; font-weight: bold; color: #dc2626; margin-left: 5px;">本日開演</span>
+                    </div>
+                  <% elsif days_left > 0 %>
+                    <div style="display: inline-flex; align-items: center; border: 1px dashed #b45309; border-left: 3px solid #b45309; background: #fffbeb; padding: 2px 8px; border-radius: 3px;">
+                      <span class="font-cinzel" style="font-size: 10px; font-weight: 700; color: #92400e; letter-spacing: 1px;">TICKET</span>
+                      <span style="font-size: 11px; color: #78350f; margin-left: 6px;">
+                        残り <strong class="font-cinzel" style="font-size: 13px; font-weight: 700; color: #b45309;"><%= days_left %></strong> 日
+                      </span>
+                    </div>
+                  <% else %>
+                    <div style="display: inline-flex; align-items: center; border: 1px solid #e2e8f0; background: #ffffff; padding: 1px 7px; border-radius: 3px;">
+                      <span class="font-cinzel" style="font-size: 10px; color: #94a3b8; letter-spacing: 0.5px;">CLOSED</span>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+
+              <% if t.name.present? && t.title.present? %>
+                <p style="font-size: 13px; color: #78716c; margin: 2px 0;">主催：<%= t.name %></p>
+              <% end %>
+              
+              <p class="concert-info" style="font-size: 13px; color: #44403c; margin: 4px 0;">
+                日程：<span class="font-cinzel" style="font-weight: 600; letter-spacing: 0.5px;"><%= t.date %></span>
+                <% if t.time.present? %>
+                  <span class="font-cinzel" style="font-weight: 600; margin-left: 4px;"><%= t.time.strftime('%H:%M') %></span>
+                <% end %>
+              </p>
+              <p class="concert-info" style="font-size: 13px; color: #44403c; margin: 4px 0;">
+                会場：<%= t.place %>
+              </p>
+
+              <div style="margin-top: 8px;">
+                <% if user_signed_in? %>
+                  <% if current_user.already_liked?(t) %>
+                    <%= button_to tweet_likes_path(t), method: :delete, class: "letterpress-btn", style: "background: #fee2e2; border: 1px solid #fca5a5; color: #dc2626; padding: 3px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;" do %>
+                      保存済み (<%= t.likes.count %>)
+                    <% end %>
+                  <% else %>
+                    <%= button_to tweet_likes_path(t), method: :post, class: "letterpress-btn", style: "background: #ffffff; border: 1px solid #d6d3d1; color: #57534e; padding: 3px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;" do %>
+                      気になる (<%= t.likes.count %>)
+                    <% end %>
+                  <% end %>
+                <% else %>
+                  <%= link_to new_user_session_path, class: "letterpress-btn", style: "background: #ffffff; border: 1px solid #d6d3d1; color: #a8a29e; padding: 3px 12px; border-radius: 4px; text-decoration: none; font-size: 12px; display: inline-flex;" do %>
+                    気になる (<%= t.likes.count %>)
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="right-container" style="display: flex; gap: 8px; align-items: center;">
+            <%= link_to "詳細", tweet_path(t.id), class: "btn-action btn-show" %>
+
+            <% if user_signed_in? && current_user.id == t.user_id %>
+              <%= link_to "編集", edit_tweet_path(t.id), class: "btn-action btn-edit" %>
+              <%= button_to "削除", tweet_path(t.id), method: :delete, data: { turbo_confirm: "本当に削除しますか？" }, class: "btn-action btn-delete" %>
             <% end %>
           </div>
+
+        </div>
+      <% end %>
+    <% else %>
+      <div class="classic-paper-card" style="text-align: center; padding: 50px 30px; border-radius: 4px; max-width: 580px; margin: 30px auto;">
+        <span class="font-cinzel" style="font-size: 11px; letter-spacing: 3.5px; color: #b45309; font-weight: 700; display: block; margin-bottom: 8px;">
+          NO ENTRIES FOUND
+        </span>
+        <h3 class="font-serif-title" style="color: #0f172a; margin: 0 0 10px 0; font-size: 19px; font-weight: 700;">
+          該当する演奏会情報はありません
+        </h3>
+        <p style="color: #78716c; font-size: 13.5px; line-height: 1.7; margin: 0 auto; max-width: 420px;">
+          指定された条件に一致するコンサートは見つかりませんでした。<br>
+          別の地域やキーワードでお試しいただくか、条件をリセットしてください。
+        </p>
+
+        <div class="classic-divider" style="margin: 18px auto 22px auto; max-width: 260px;">
+          <span class="classic-divider-ornament">❖</span>
         </div>
 
-        <!-- 👉 右側：ボタンエリア -->
-        <div class="right-container">
-          <%= link_to "詳細", tweet_path(t.id), class: "btn-action btn-show" %>
-          <%= link_to "編集", edit_tweet_path(t.id), class: "btn-action btn-edit" %>
-          <%= button_to "削除", tweet_path(t.id), method: :delete, data: { turbo_confirm: "本当に削除しますか？" }, class: "btn-action btn-delete" %>
+        <div>
+          <% if params[:search].present? || @area.present? %>
+            <%= link_to "検索条件をリセットする", tweets_path(tab: @tab), class: "letterpress-btn", style: "background: #0f172a; color: #ffffff; border: 1px solid #b45309; padding: 9px 24px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: bold; display: inline-block;" %>
+          <% elsif user_signed_in? %>
+            <%= link_to "新しい演奏会を登録する", new_tweet_path, class: "letterpress-btn", style: "background: #f59e0b; color: #ffffff; padding: 9px 24px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: bold; display: inline-block;" %>
+          <% end %>
         </div>
       </div>
-
-      <p class="time">投稿日時: <%= t.created_at.strftime('%Y/%m/%d %H:%M') %></p>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>

@@ -1,534 +1,113 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
- * vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any other CSS
- * files in this directory. Styles in this file should be added after the last require_* statement.
- * It is generally better to create a new file per style scope.
- *
- *= require_tree .
- *= require_self
- */
-/* simple_calendar の基本デザイン */
-.simple-calendar {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-}
+/* =========================================
+   🎻 マンドリン・ウッディ＆ミッドナイト テーマ
+   ========================================= */
 
-.simple-calendar table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.simple-calendar th {
-  padding: 10px;
-  border: 1px solid #ddd;
-  background-color: #f8f9fa;
-  text-align: center;
-}
-
-.simple-calendar td {
-  height: 90px;
-  width: 14.28%;
-  vertical-align: top;
-  padding: 6px;
-  border: 1px solid #ddd;
-}
-
-.simple-calendar .day {
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.simple-calendar .today {
-  background-color: #fffbeb; /* 今日の日付の色 */
-}
-
-.simple-calendar .prev-month,
-.simple-calendar .next-month {
-  background-color: #f3f4f6; /* 前月・次月の日付の色 */
-  color: #9ca3af;
-}
-
-/* 🌟 全体のリセットと基本フォント */
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
+/* 全体ベース＆タイポグラフィ */
 body {
-  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "メイリオ", Meiryo, sans-serif;
-  background-color: #f8fafc;
-  color: #333333;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* 🎻 ヘッダーのデザイン（落ち着いたネイビー系ブルー） */
-header {
-  background-color: #1e3a8a;
-  height: 70px;
-  padding: 0 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-header h1 a {
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 20px;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-}
-
-.header-nav ul {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  list-style: none;
-}
-
-.header-nav li a {
-  color: #e2e8f0;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.header-nav li a:hover {
-  color: #38bdf8;
-}
-
-/* ヘッダー内のボタン（ログアウト・ログイン） */
-.header-btn, .header-btn-link {
-  background-color: #3b82f6;
-  color: #ffffff !important;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 13px;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.header-btn:hover, .header-btn-link:hover {
-  background-color: #2563eb;
-}
-
-/* 📱 メインコンテンツの余白調整 */
-.main-container {
-  flex: 1;
-  max-width: 1000px;
-  width: 90%;
-  margin: 30px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-/* 📜 フッターのデザイン */
-footer {
-  background-color: #0f172a;
-  color: #94a3b8;
-  text-align: center;
-  padding: 20px 0;
-  font-size: 12px;
-}
-
-/* 🌟 全体の余白リセット */
-* {
-  padding: 0;
+  background-color: #fcfbfa; /* 優しいアイボリーベージュ */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", Meiryo, sans-serif;
+  color: #1e293b; /* 読みやすいディープネイビーグレー */
   margin: 0;
-  box-sizing: border-box;
-}
-
-/* 🌟 画面全体を縦並びのFlexboxにする（フッターを自然に一番下に押し出す仕組み） */
-body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "メイリオ", Meiryo, sans-serif;
-  background-color: #f8fafc;
-}
-
-/* 🎻 ヘッダーのFlexbox */
-header {
-  background-color: #1e3a8a;
-  height: 80px;
-  display: flex;
-  justify-content: space-between; /* 左右に離す */
-  align-items: center;            /* 上下中央揃え */
-  padding: 0 30px;
-}
-
-header h1 a {
-  color: white;
-  text-decoration: none;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.header-list ul {
-  display: flex;       /* リストを横並びに */
-  align-items: center; /* 上下中央揃え */
-  gap: 20px;
-  list-style: none;
-}
-
-.header-list a {
-  color: white;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-/* 📱 メイン画面（ここが伸びてフッターを下に押してくれるよ！） */
-main {
-  flex: 1;             /* 残りの高さを全部使って埋める */
-  max-width: 960px;
-  width: 90%;
-  margin: 30px auto;   /* 上下30px、左右autoで中央配置 */
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-/* 📜 教材で学んだフッターのFlexbox！ */
-footer {
-  color: white;
-  height: 40px;
-  background-color: #0f172a;
-  width: 100%;
-  display: flex;
-  align-items: center;          /* 垂直方向（上下）を中央揃え */
-  justify-content: flex-end;     /* 水平方向（左右）を右揃え（中央にしたいなら center） */
-  padding-right: 30px;           /* 右側に余白（margin/padding）を作る */
-  font-size: 12px;
-}
-
-/* 🎻 演奏会一覧のレイアウト（教材のスタイルをベースに拡張） */
-.page-title {
-  text-align: center;
-  color: #1e3a8a;
-  margin-bottom: 15px;
-}
-
-.action-nav {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 25px;
-}
-
-.btn-primary {
-  background-color: #2563eb;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.btn-secondary {
-  background-color: #0284c7;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.calendar-event-pill {
-  font-size: 11px;
-  background: #e0f2fe;
-  color: #0369a1;
-  padding: 2px 4px;
-  margin-top: 2px;
-  border-radius: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* 📦 演奏会カードの箱 */
-.tweets-container {
-  width: 90%;
-  max-width: 800px;
-  margin: 10px auto;
-}
-
-.tweets-container h3 {
-  width: 140px;
-  margin: 20px auto;
-  text-align: center;
-  color: #334155;
-}
-
-.tweet {
-  border-top: 2px solid #00acee; /* 教材のアクセントボーダー */
-  margin-top: 15px;
-  padding-top: 15px;
-  padding-bottom: 10px;
-}
-
-/* ↔️ 教材のメイン：左右分割 Flexbox */
-.main-box {
-  margin: 8px 0;
-  display: flex;
-  justify-content: space-between; /* 左と右に離す */
-  align-items: flex-start;
-  gap: 20px;
-}
-
-.left-container {
-  flex: 1;
-}
-
-.poster {
-  font-size: 12px;
-  color: #64748b;
-  margin-bottom: 6px;
-}
-
-.concert-title {
-  font-size: 18px;
-  color: #1e293b;
-  margin-bottom: 6px;
-}
-
-.concert-info {
-  font-size: 14px;
-  color: #475569;
   line-height: 1.6;
 }
 
-/* 👉 右側のボタングループ */
-.right-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 70px;
-}
-
-.btn-action {
+/* リンク共通 */
+a {
+  color: #b45309; /* ウォルナットブラウン */
   text-decoration: none;
-  text-align: center;
-  font-size: 12px;
-  padding: 5px 10px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  display: block;
+  transition: color 0.2s ease;
+}
+a:hover {
+  color: #78350f;
 }
 
-.btn-show {
-  background-color: #f1f5f9;
-  color: #0284c7;
-  border: 1px solid #cbd5e1;
+/* 🎴 カード＆ホバーエフェクト（ウッディ枠線＆やわらかな影） */
+.card-box, .tweet, .movie-card {
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px -2px rgba(41, 37, 36, 0.04), 0 2px 4px -2px rgba(41, 37, 36, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.btn-edit {
-  background-color: #ecfdf5;
-  color: #16a34a;
-  border: 1px solid #a7f3d0;
+.card-box:hover, .tweet:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 20px -3px rgba(41, 37, 36, 0.08), 0 4px 6px -4px rgba(41, 37, 36, 0.03);
 }
 
-.btn-delete {
-  background-color: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
-  width: 100%;
-}
-
-/* 🕒 投稿日時の右寄せ */
-.time {
-  display: flex;
-  justify-content: flex-end;
-  font-size: 11px;
-  color: #94a3b8;
-  margin-top: 8px;
-}
-
-/* 🎬 演奏動画一覧のカードデザイン */
-.movies-container {
-  width: 90%;
-  max-width: 800px;
-  margin: 10px auto;
-}
-
-.movies-container h3 {
-  width: 160px;
-  margin: 20px auto;
-  text-align: center;
-  color: #334155;
-}
-
-.movie-card {
-  border-top: 2px solid #ef4444; /* 動画はYouTubeカラーの赤アクセント！ */
-  margin-top: 20px;
-  padding-top: 15px;
-  padding-bottom: 10px;
-}
-
-.movie-main-box {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-}
-
-.movie-player-container {
-  flex: 0 0 300px; /* 動画の横幅を300pxで固定 */
-}
-
-.no-video-box {
-  width: 100%;
-  height: 180px;
-  background-color: #f1f5f9;
-  display: flex;
+/* 🔘 ボタン共通スタイル＆アニメーション */
+.btn-action {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
-  border-radius: 6px;
+  padding: 6px 14px;
   font-size: 13px;
-}
-
-.movie-info-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.movie-title {
-  font-size: 17px;
-  color: #1e293b;
-  margin-bottom: 8px;
-}
-
-.movie-point-box {
-  background-color: #f8fafc;
-  padding: 10px;
-  border-radius: 6px;
-  font-size: 13px;
-  color: #475569;
-  margin-bottom: 12px;
-  flex: 1;
-}
-
-.movie-actions {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-/* 📝 投稿フォームのコンテナ（教材のデザインベース） */
-.post-container {
-  margin: 30px auto;
-  width: 90%;
-  max-width: 650px;
-  border: 2px solid #d3def1;
-  border-radius: 12px;
-  background-color: #f1f5f9;
-  padding: 30px 40px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
-.post-container .title {
-  font-size: 26px;
-  font-weight: bold;
-  color: #1e3a8a;
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-/* 各入力欄のグループ */
-.form-group {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-.form-group label {
-  display: block;
-  font-weight: bold;
-  font-size: 14px;
-  color: #334155;
-  margin-bottom: 6px;
-}
-
-/* テキストボックス、日付、時間、テキストエリアの共通スタイル */
-.post-container input[type="text"],
-.post-container input[type="date"],
-.post-container input[type="time"],
-.post-container textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 14px;
-  background-color: #ffffff;
-  box-sizing: border-box;
-}
-
-.post-container input[type="text"]:focus,
-.post-container textarea:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-/* 日付と時間を横並びにするレイアウト */
-.form-group-inline {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.form-group-half {
-  flex: 1;
-  text-align: left;
-}
-
-.form-group-half label {
-  display: block;
-  font-weight: bold;
-  font-size: 14px;
-  color: #334155;
-  margin-bottom: 6px;
-}
-
-/* 送信ボタンエリア */
-.submit-box {
-  text-align: center;
-  margin: 30px 0 20px 0;
-}
-
-.post-container input[type="submit"] {
-  width: 220px;
-  height: 48px;
-  font-size: 16px;
-  font-weight: bold;
-  background-color: #2563eb;
-  color: white;
-  border: none;
+  font-weight: 600;
   border-radius: 8px;
+  text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s;
+  border: none;
+  transition: all 0.2s ease;
 }
 
-.post-container input[type="submit"]:hover {
-  background-color: #1d4ed8;
+.btn-action:hover {
+  filter: brightness(0.96);
+  transform: translateY(-1px);
+}
+
+/* 詳細ボタン（ミッドナイトネイビー） */
+.btn-show {
+  background: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+}
+.btn-show:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* 編集ボタン（ウォルナット） */
+.btn-edit {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+.btn-edit:hover {
+  background: #fde68a;
+  color: #78350f;
+}
+
+/* 削除ボタン */
+.btn-delete {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+.btn-delete:hover {
+  background: #fee2e2;
+}
+
+/* 🧭 ナビゲーション・タイトル */
+.concert-title a {
+  color: #0f172a !important;
+}
+.concert-title a:hover {
+  color: #b45309 !important;
+  text-decoration: underline;
+}
+
+/* 📱 スマホ対応（レスポンシブ） */
+@media (max-width: 640px) {
+  .page-container {
+    padding: 15px 12px !important;
+  }
+  .tweet {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  .right-container {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
 }

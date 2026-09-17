@@ -1,98 +1,198 @@
-<div class="mypage-container" style="max-width: 800px; margin: 0 auto;">
-  <!-- 👤 ユーザープロフヘッダー -->
-  <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 20px; margin-bottom: 30px; display: flex; align-items: center; gap: 20px;">
-    <div style="font-size: 48px;">👤</div>
-    <div>
-      <h2 style="color: #1e3a8a; margin-bottom: 5px;">マイページ</h2>
-      <p style="color: #475569; font-size: 14px;"><strong>アカウント：</strong><%= @user.email %></p>
-      <p style="color: #64748b; font-size: 13px;">登録日：<%= @user.created_at.strftime('%Y年%m月%d日') %></p>
+<div class="user-profile-container" style="max-width: 920px; margin: 30px auto; padding: 0 10px;">
+
+  <!-- 🏛️ アンティーク会員証・書誌台帳ヘッダーカード -->
+  <div class="classic-paper-card" style="padding: 36px 30px; border-radius: 4px; margin-bottom: 35px; position: relative;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px;">
+      <div>
+        <span class="font-cinzel" style="font-size: 11px; letter-spacing: 3px; color: #b45309; font-weight: 700; display: block; margin-bottom: 6px;">
+          MEMBER ARCHIVE &amp; CERTIFICATE
+        </span>
+        <h1 class="font-serif-title" style="color: #0f172a; margin: 0 0 6px 0; font-size: 24px; font-weight: 700;">
+          <%= (@user.try(:name).presence || @user.email.split('@').first) %>
+        </h1>
+        <p style="margin: 0; color: #78716c; font-size: 13px;">
+          アカウント：<%= @user.email %>
+        </p>
+      </div>
+
+      <!-- 会員ステータス印鑑風バッジ -->
+      <div style="border: 1px solid #b45309; outline: 1px dashed rgba(180, 83, 9, 0.4); outline-offset: 3px; padding: 6px 14px; text-align: center; background: #fffbeb; border-radius: 2px;">
+        <span class="font-cinzel" style="font-size: 9.5px; letter-spacing: 1.5px; color: #92400e; font-weight: 700; display: block;">STATUS</span>
+        <span class="font-cinzel" style="font-size: 12px; font-weight: 800; color: #b45309; letter-spacing: 1px;">ACTIVE MEMBER</span>
+      </div>
     </div>
+
+    <!-- オーナメント罫線 -->
+    <div class="classic-divider" style="margin: 20px auto 16px auto; max-width: 360px;">
+      <span class="classic-divider-ornament">❖</span>
+    </div>
+
+    <!-- 統計サマリー台帳（カウンター） -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-top: 15px;">
+      <div class="classic-paper-inner" style="padding: 12px 16px; border-radius: 4px; text-align: center; border: 1px solid #e7e5e4;">
+        <span class="font-cinzel" style="font-size: 10px; color: #78716c; letter-spacing: 1px; display: block; margin-bottom: 2px;">POSTED CONCERTS</span>
+        <strong class="font-cinzel" style="font-size: 20px; color: #0f172a; font-weight: 700;"><%= @user.tweets.count rescue 0 %></strong>
+      </div>
+      <div class="classic-paper-inner" style="padding: 12px 16px; border-radius: 4px; text-align: center; border: 1px solid #e7e5e4;">
+        <span class="font-cinzel" style="font-size: 10px; color: #78716c; letter-spacing: 1px; display: block; margin-bottom: 2px;">SAVED CONCERTS</span>
+        <strong class="font-cinzel" style="font-size: 20px; color: #b45309; font-weight: 700;"><%= @user.likes.count rescue 0 %></strong>
+      </div>
+      <div class="classic-paper-inner" style="padding: 12px 16px; border-radius: 4px; text-align: center; border: 1px solid #e7e5e4;">
+        <span class="font-cinzel" style="font-size: 10px; color: #78716c; letter-spacing: 1px; display: block; margin-bottom: 2px;">POSTED MOVIES</span>
+        <strong class="font-cinzel" style="font-size: 20px; color: #0f172a; font-weight: 700;"><%= @user.movies.count rescue 0 %></strong>
+      </div>
+    </div>
+
+    <!-- ユーザー情報編集リンク（本人の場合のみ） -->
+    <% if current_user == @user %>
+      <div style="margin-top: 20px; text-align: right;">
+        <%= link_to "会員情報の変更 ≫", edit_user_registration_path, class: "gold-underline-dark", style: "font-size: 12.5px; font-weight: 600;" %>
+      </div>
+    <% end %>
   </div>
 
-  <!-- 🎻 投稿した演奏会一覧セクション -->
-  <section style="margin-bottom: 40px;">
-    <h3 style="border-bottom: 2px solid #00acee; padding-bottom: 8px; color: #1e293b; margin-bottom: 15px;">
-      🎺 投稿した演奏会（<%= @tweets.count %>件）
-    </h3>
+  <!-- 📖 書誌目録（セクション切り替え） -->
 
-    <% if @tweets.present? %>
-      <div class="tweets-container" style="width: 100%;">
-        <% @tweets.each do |t| %>
-          <div class="tweet" style="margin-bottom: 15px;">
-            <div class="main-box">
-              <div class="left-container">
-                <h4 class="concert-title"><%= t.title.presence || t.name %></h4>
-                <p class="concert-info"><strong>日時：</strong><%= t.date %> <%= t.time.strftime('%H:%M') if t.time.present? %></p>
-                <p class="concert-info"><strong>場所：</strong><%= t.place %></p>
+  <!-- セクション1：投稿した演奏会 -->
+  <div style="margin-bottom: 40px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; border-bottom: 2px solid #0f172a; padding-bottom: 8px;">
+      <div>
+        <span class="font-cinzel" style="font-size: 10.5px; letter-spacing: 2px; color: #b45309; font-weight: 700; display: block;">CATALOG 01</span>
+        <h2 class="font-serif-title" style="margin: 0; color: #0f172a; font-size: 19px; font-weight: 700;">投稿した演奏会</h2>
+      </div>
+      <span class="font-cinzel" style="font-size: 12px; color: #78716c; font-weight: bold;"><%= @user.tweets.count rescue 0 %> ENTRIES</span>
+    </div>
+
+    <% if @user.tweets.present? %>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <% @user.tweets.order(created_at: :desc).each do |t| %>
+          <div class="classic-paper-inner" style="border: 1px solid #d6d3d1; border-radius: 4px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; box-shadow: 0 2px 5px rgba(41, 37, 36, 0.03);">
+            <div style="display: flex; gap: 14px; align-items: center; flex: 1; min-width: 260px;">
+              <div class="paper-shadow paper-shadow-hover" style="flex-shrink: 0; width: 65px; height: 88px; border-radius: 4px; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
+                <% if t.pamphlets.attached? %>
+                  <%= link_to tweet_path(t.id) do %>
+                    <%= image_tag t.pamphlets.first, style: "width: 100%; height: 100%; object-fit: cover; display: block;" %>
+                  <% end %>
+                <% else %>
+                  <div class="font-cinzel" style="font-size: 9px; color: #a8a29e; font-weight: 700;">NO IMAGE</div>
+                <% end %>
               </div>
+              <div>
+                <strong class="font-serif-title" style="font-size: 16px; font-weight: 600;">
+                  <%= link_to (t.title.presence || t.name), tweet_path(t.id), class: "serif-hover", style: "color: #0f172a; text-decoration: none;" %>
+                </strong>
+                <p style="margin: 3px 0 0 0; color: #78716c; font-size: 12.5px;">
+                  日程：<span class="font-cinzel" style="font-weight: 600;"><%= t.date %></span> ｜ 会場：<%= t.place %>
+                </p>
+              </div>
+            </div>
 
-              <!-- 右側：操作ボタン -->
-              <div class="right-container">
-                <%= link_to "詳細", tweet_path(t.id), class: "btn-action btn-show" %>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <%= link_to "詳細", tweet_path(t.id), class: "btn-action btn-show" %>
+              <% if current_user == @user %>
                 <%= link_to "編集", edit_tweet_path(t.id), class: "btn-action btn-edit" %>
                 <%= button_to "削除", tweet_path(t.id), method: :delete, data: { turbo_confirm: "本当に削除しますか？" }, class: "btn-action btn-delete" %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="classic-paper-inner" style="border: 1px dashed #d6d3d1; padding: 25px; text-align: center; color: #78716c; font-size: 13px; border-radius: 4px;">
+        まだ投稿した演奏会情報はありません。
+      </div>
+    <% end %>
+  </div>
+
+  <!-- セクション2：保存した演奏会（気になる） -->
+  <div style="margin-bottom: 40px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; border-bottom: 2px solid #b45309; padding-bottom: 8px;">
+      <div>
+        <span class="font-cinzel" style="font-size: 10.5px; letter-spacing: 2px; color: #b45309; font-weight: 700; display: block;">CATALOG 02</span>
+        <h2 class="font-serif-title" style="margin: 0; color: #0f172a; font-size: 19px; font-weight: 700;">保存した演奏会（気になる）</h2>
+      </div>
+      <span class="font-cinzel" style="font-size: 12px; color: #b45309; font-weight: bold;"><%= @user.likes.count rescue 0 %> SAVED</span>
+    </div>
+
+    <% if @user.respond_to?(:likes) && @user.likes.present? %>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <% @user.likes.order(created_at: :desc).each do |like| %>
+          <% t = like.tweet rescue nil %>
+          <% next if t.blank? %>
+          <div class="classic-paper-inner" style="border: 1px solid #d6d3d1; border-radius: 4px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; box-shadow: 0 2px 5px rgba(41, 37, 36, 0.03);">
+            <div style="display: flex; gap: 14px; align-items: center; flex: 1; min-width: 260px;">
+              <div class="paper-shadow paper-shadow-hover" style="flex-shrink: 0; width: 65px; height: 88px; border-radius: 4px; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
+                <% if t.pamphlets.attached? %>
+                  <%= link_to tweet_path(t.id) do %>
+                    <%= image_tag t.pamphlets.first, style: "width: 100%; height: 100%; object-fit: cover; display: block;" %>
+                  <% end %>
+                <% else %>
+                  <div class="font-cinzel" style="font-size: 9px; color: #a8a29e; font-weight: 700;">NO IMAGE</div>
+                <% end %>
+              </div>
+              <div>
+                <strong class="font-serif-title" style="font-size: 16px; font-weight: 600;">
+                  <%= link_to (t.title.presence || t.name), tweet_path(t.id), class: "serif-hover", style: "color: #0f172a; text-decoration: none;" %>
+                </strong>
+                <p style="margin: 3px 0 0 0; color: #78716c; font-size: 12.5px;">
+                  日程：<span class="font-cinzel" style="font-weight: 600;"><%= t.date %></span> ｜ 会場：<%= t.place %>
+                </p>
               </div>
             </div>
-          </div>
-        <% end %>
-      </div>
-    <% else %>
-      <p style="color: #94a3b8; font-size: 14px;">まだ投稿した演奏会はありません。</p>
-    <% end %>
-  </section>
 
-  <!-- 🎬 投稿した動画一覧セクション -->
-  <section style="margin-bottom: 40px;">
-    <h3 style="border-bottom: 2px solid #ef4444; padding-bottom: 8px; color: #1e293b; margin-bottom: 15px;">
-      🎬 投稿したおすすめ演奏動画（<%= @movies.count %>件）
-    </h3>
-
-    <% if @movies.present? %>
-      <div style="display: flex; flex-direction: column; gap: 15px;">
-        <% @movies.each do |m| %>
-          <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; display: flex; gap: 15px; align-items: center; justify-content: space-between;">
             <div>
-              <h4 style="color: #1e293b; margin-bottom: 6px;"><%= m.movietitle %></h4>
-              <p style="color: #64748b; font-size: 13px;"><%= truncate(m.point, length: 50) %></p>
-            </div>
-
-            <div style="display: flex; gap: 8px; min-width: 140px; justify-content: flex-end;">
-              <%= link_to "詳細", movie_path(m.id), class: "btn-action btn-show" %>
-              <%= link_to "編集", edit_movie_path(m.id), class: "btn-action btn-edit" %>
-              <%= button_to "削除", movie_path(m.id), method: :delete, data: { turbo_confirm: "本当に削除しますか？" }, class: "btn-action btn-delete" %>
+              <%= link_to "詳細を見る", tweet_path(t.id), class: "btn-action btn-show" %>
             </div>
           </div>
         <% end %>
       </div>
     <% else %>
-      <p style="color: #94a3b8; font-size: 14px;">まだ投稿した動画はありません。</p>
+      <div class="classic-paper-inner" style="border: 1px dashed #d6d3d1; padding: 25px; text-align: center; color: #78716c; font-size: 13px; border-radius: 4px;">
+        気になる演奏会として保存されたものはありません。
+      </div>
     <% end %>
-  </section>
-
-  <div style="text-align: center; margin-top: 20px;">
-    <%= link_to "ホームへ戻る", root_path, style: "color: #2563eb; text-decoration: none;" %>
   </div>
-</div>
 
-<!-- 💖 気になる！した演奏会一覧セクション -->
-  <section style="margin-bottom: 40px;">
-    <h3 style="border-bottom: 2px solid #ec4899; padding-bottom: 8px; color: #1e293b; margin-bottom: 15px;">
-      💖 気になる！した演奏会（<%= @liked_tweets.count %>件）
-    </h3>
+  <!-- セクション3：投稿した演奏動画 -->
+  <div style="margin-bottom: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; border-bottom: 2px solid #0f172a; padding-bottom: 8px;">
+      <div>
+        <span class="font-cinzel" style="font-size: 10.5px; letter-spacing: 2px; color: #b45309; font-weight: 700; display: block;">CATALOG 03</span>
+        <h2 class="font-serif-title" style="margin: 0; color: #0f172a; font-size: 19px; font-weight: 700;">投稿した演奏動画</h2>
+      </div>
+      <span class="font-cinzel" style="font-size: 12px; color: #78716c; font-weight: bold;"><%= @user.movies.count rescue 0 %> VIDEOS</span>
+    </div>
 
-    <% if @liked_tweets.present? %>
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <% @liked_tweets.each do |t| %>
-          <div style="border: 1px solid #fbcfe8; background: #fffdfd; border-radius: 8px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center;">
+    <% if @user.respond_to?(:movies) && @user.movies.present? %>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+        <% @user.movies.order(created_at: :desc).each do |m| %>
+          <div class="classic-paper-inner" style="border: 1px solid #d6d3d1; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-              <h4 style="color: #9d174d; margin-bottom: 4px;"><%= t.title.presence || t.name %></h4>
-              <p style="font-size: 13px; color: #64748b;">📅 日時：<%= t.date %> / 📍 場所：<%= t.place %></p>
+              <% if m.link.present? && find_youtube_url(m.link).present? %>
+                <iframe width="100%" height="150" 
+                        src="https://www.youtube.com/embed/<%= find_youtube_url(m.link) %>" 
+                        frameborder="0" allowfullscreen style="display: block;">
+                </iframe>
+              <% end %>
+              <div style="padding: 12px 14px;">
+                <h4 class="font-serif-title" style="margin: 0 0 4px 0; font-size: 15px; font-weight: 600; color: #0f172a;">
+                  <%= link_to m.movietitle, movie_path(m.id), class: "serif-hover", style: "color: #0f172a; text-decoration: none;" %>
+                </h4>
+                <p style="color: #78716c; font-size: 12px; margin: 0; line-height: 1.5;"><%= truncate(m.point, length: 45) %></p>
+              </div>
             </div>
-            <%= link_to "詳細を見る", tweet_path(t.id), class: "btn-action btn-show" %>
+            <div style="padding: 8px 14px; background: #f5f5f4; border-top: 1px solid #e7e5e4; text-align: right;">
+              <%= link_to "動画詳細へ", movie_path(m.id), class: "btn-action btn-show" %>
+            </div>
           </div>
         <% end %>
       </div>
     <% else %>
-      <p style="color: #94a3b8; font-size: 14px;">まだ「気になる！」した演奏会はありません。</p>
+      <div class="classic-paper-inner" style="border: 1px dashed #d6d3d1; padding: 25px; text-align: center; color: #78716c; font-size: 13px; border-radius: 4px;">
+        まだ投稿した動画はありません。
+      </div>
     <% end %>
-  </section>
+  </div>
+
+</div>

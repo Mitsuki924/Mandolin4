@@ -1,51 +1,91 @@
-<h1>演奏会の編集</h1>
+<div class="form-container card-box" style="max-width: 680px; margin: 30px auto; padding: 30px; background: #ffffff; border: 1px solid #e7e5e4; border-radius: 14px; box-shadow: 0 4px 12px rgba(41, 37, 36, 0.05);">
+  <h2 style="color: #0f172a; margin-top: 0; border-bottom: 2px solid #b45309; padding-bottom: 10px; font-size: 20px;">演奏会情報の編集</h2>
 
-<%= form_for @tweet do |f| %>
-  <div class="field">
-    <%= f.label :name, "団体名" %>
-    <%= f.text_field :name, size: 30 %>
-  </div>
+  <%= form_with(model: @tweet, local: true) do |f| %>
+    <!-- タイトル -->
+    <div style="margin-bottom: 16px;">
+      <%= f.label :title, "演奏会タイトル", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #0f172a; font-size: 14px;" %>
+      <%= f.text_field :title, style: "width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #d6d3d1; border-radius: 6px; font-size: 14px; background: #fff;" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :title, "演奏会名" %>
-    <%= f.text_field :title, size: 30 %>
-  </div>
+    <!-- 主催・団体名 -->
+    <div style="margin-bottom: 16px;">
+      <%= f.label :name, "主催・団体名", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #0f172a; font-size: 14px;" %>
+      <%= f.text_field :name, style: "width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #d6d3d1; border-radius: 6px; font-size: 14px; background: #fff;" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :date, "日程" %>
-    <%= f.date_field :date %>
-  </div>
+    <!-- 開催日 ＆ 時間 -->
+    <div style="display: flex; gap: 15px; margin-bottom: 16px; flex-wrap: wrap;">
+      <div style="flex: 1; min-width: 160px;">
+        <%= f.label :date, "開催日", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #0f172a; font-size: 14px;" %>
+        <%= f.date_field :date, style: "width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #d6d3d1; border-radius: 6px; font-size: 14px; background: #fff;" %>
+      </div>
+      <div style="flex: 1; min-width: 160px;">
+        <%= f.label :time, "開場 / 開演時間", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #0f172a; font-size: 14px;" %>
+        <%= f.time_field :time, style: "width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #d6d3d1; border-radius: 6px; font-size: 14px; background: #fff;" %>
+      </div>
+    </div>
 
-  <div class="field">
-    <%= f.label :time, "開演時間" %>
-    <%= f.time_field :time %>
-  </div>
+    <!-- ★ 開催地域（エリア） -->
+    <div style="margin-bottom: 16px;">
+      <%= f.label :area, "開催地域（エリア）", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #0f172a; font-size: 14px;" %>
+      <%= f.select :area, [
+        ["選択してください", ""],
+        ["東京都", "東京都"],
+        ["千葉県", "千葉県"],
+        ["神奈川県", "神奈川県"],
+        ["埼玉県", "埼玉県"],
+        ["関東その他", "関東その他"],
+        ["近畿・関西", "近畿・関西"],
+        ["東海・中部", "東海・中部"],
+        ["北海道・東北", "北海道・東北"],
+        ["中国・四国", "中国・四国"],
+        ["九州・沖縄", "九州・沖縄"]
+      ], {}, style: "width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #d6d3d1; border-radius: 6px; font-size: 14px; background: #fff;" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :place, "開催場所" %>
-    <%= f.text_field :place, size: 30 %>
-  </div>
+    <!-- 会場・開催場所 -->
+    <div style="margin-bottom: 16px;">
+      <%= f.label :place, "会場・開催場所", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #0f172a; font-size: 14px;" %>
+      <%= f.text_field :place, style: "width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #d6d3d1; border-radius: 6px; font-size: 14px; background: #fff;" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :access, "アクセス" %>
-    <%= f.text_field :access, size: 30 %>
-  </div>
+    <!-- アクセス -->
+    <div style="margin-bottom: 16px;">
+      <%= f.label :access, "交通アクセス", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #0f172a; font-size: 14px;" %>
+      <%= f.text_field :access, style: "width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #d6d3d1; border-radius: 6px; font-size: 14px; background: #fff;" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :price, "入場料" %>
-    <%= f.text_field :price, size: 20 %>
-  </div>
+    <!-- 入場料・チケット代 -->
+    <div style="margin-bottom: 16px;">
+      <%= f.label :price, "入場料・チケット", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #0f172a; font-size: 14px;" %>
+      <%= f.text_field :price, style: "width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #d6d3d1; border-radius: 6px; font-size: 14px; background: #fff;" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :program, "曲目・プログラム" %>
-    <%= f.text_area :program, size: "40x5" %>
-  </div>
+    <!-- プログラム・曲目 -->
+    <div style="margin-bottom: 16px;">
+      <%= f.label :program, "演奏曲目・プログラム", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #0f172a; font-size: 14px;" %>
+      <%= f.text_area :program, rows: 6, style: "width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #d6d3d1; border-radius: 6px; font-size: 14px; line-height: 1.6; background: #fff;" %>
+    </div>
 
-  <div style="margin-top: 15px;">
-    <%= f.submit "変更を更新する" %>
-  </div>
-<% end %>
+    <!-- 公式HP・SNSリンク -->
+    <div style="margin-bottom: 16px;">
+      <%= f.label :website_url, "公式HP・SNSリンク（任意）", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #0f172a; font-size: 14px;" %>
+      <%= f.url_field :website_url, placeholder: "例：https://example.com や公式X/InstagramのURL", style: "width: 100%; box-sizing: border-box; padding: 9px 12px; border: 1px solid #d6d3d1; border-radius: 6px; font-size: 14px; background: #fff;" %>
+      <p style="font-size: 12px; color: #78716c; margin: 4px 0 0 0;">※ 団体の公式サイト、予約ページ、公式XなどのURLを入力できます。</p>
+    </div>
 
-<br>
-<%= link_to "詳細に戻る", tweet_path(@tweet.id) %> | 
-<%= link_to "一覧に戻る", tweets_path %>
+    <!-- パンフレット画像（複数枚対応） -->
+    <div style="margin-bottom: 24px;">
+      <%= f.label :pamphlets, "パンフレット・チラシ画像（表面・裏面の2枚まで選択可）", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #0f172a; font-size: 14px;" %>
+      <%= f.file_field :pamphlets, multiple: true, accept: "image/*", style: "width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #d6d3d1; border-radius: 6px; background: #fff;" %>
+      <p style="font-size: 12px; color: #78716c; margin: 4px 0 0 0;">※ 新しい画像を選択すると上書き登録されます。</p>
+    </div>
+
+    <!-- 送信ボタン -->
+    <div style="text-align: right; display: flex; justify-content: flex-end; align-items: center; gap: 14px;">
+      <%= link_to "キャンセル", tweet_path(@tweet.id), style: "color: #78716c; text-decoration: none; font-size: 14px;" %>
+      <%= f.submit "演奏会情報を更新する", style: "background: #f59e0b; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer;" %>
+    </div>
+  <% end %>
+</div>
