@@ -63,4 +63,4 @@ gem 'simple_calendar', '~> 2.4'
 group :production do
   gem 'pg'
 end
-gem 'json', '~> 2.7'
+gem 'json', '~> 3.0'
